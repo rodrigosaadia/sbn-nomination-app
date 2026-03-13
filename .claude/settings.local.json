@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"C:\\\\Users\\\\rodri\\\\OneDrive - Nerpa\\\\JS\\\\SBN\" && npx vite build 2>&1 | head -30)",
+      "Bash(cd \"C:\\\\Users\\\\rodri\\\\OneDrive - Nerpa\\\\JS\\\\SBN\" && node fix-unicode.js)",
+      "Bash(cd \"C:\\\\Users\\\\rodri\\\\OneDrive - Nerpa\\\\JS\\\\SBN\" && mv fix-unicode.js fix-unicode.cjs && node fix-unicode.cjs)",
+      "Bash(cd \"C:\\\\Users\\\\rodri\\\\OneDrive - Nerpa\\\\JS\\\\SBN\" && npx vite build 2>&1 | head -15)",
+      "Bash(cd \"C:\\\\Users\\\\rodri\\\\OneDrive - Nerpa\\\\JS\\\\SBN\" && npx vite --port 5173 2>&1)",
+      "Bash(xxd \"C:/Users/rodri/OneDrive - Nerpa/JS/SBN/sbn-nomination-app.jsx\" | head -5)"
+    ]
+  }
+}
