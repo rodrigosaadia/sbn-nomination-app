@@ -24,6 +24,23 @@ const COURSES = [
   { id: 8, name: "Luxury Brand Management", code: "SBN-LBM", investment: 14000, seats: 15, category: "Marketing", format: "In-Person", duration: "5 days", provider: "Bocconi", description: "Luxury brand management and premium experience.", objective: "Master the codes of luxury and create memorable brand experiences.", skills: ["Luxury Marketing", "Brand Equity", "Premium Positioning"], prereqs: { minMonthsCompany: 36, minMonthsDivision: 24, maxAge: 40, requiredCourse: "SBN-GME", divisionRange: null }, status: "Active" },
 ];
 
+const PREVIOUS_YEAR_DATA = {
+  byCountry: {
+    Brazil: { nominations: 22, investment: 198000 },
+    Mexico: { nominations: 18, investment: 162000 },
+    Argentina: { nominations: 14, investment: 126000 },
+    Colombia: { nominations: 10, investment: 90000 },
+    Chile: { nominations: 7, investment: 63000 },
+  },
+  byCourse: {
+    1: { nominations: 12, investment: 150000 }, 2: { nominations: 15, investment: 147000 },
+    3: { nominations: 8, investment: 89600 }, 4: { nominations: 10, investment: 85000 },
+    5: { nominations: 14, investment: 109200 }, 6: { nominations: 6, investment: 55200 },
+    7: { nominations: 4, investment: 35600 }, 8: { nominations: 2, investment: 28000 },
+  },
+  totals: { nominations: 71, investment: 639000 },
+};
+
 const TALENT_CLASSES = ["Essential Players", "Rising Players", "Future Leaders"];
 const DIVISIONS = ["Luxe", "Consumer Products", "Professional Products", "Active Cosmetics", "Operations", "Finance", "HR", "Digital"];
 const PERFORMANCE_RATINGS = ["Exceeds Expectations", "Strong Performer", "Meets Expectations", "Developing"];
@@ -32,16 +49,16 @@ const RISK_LEVELS = ["High", "Medium", "Low"];
 const CURRENT_USER = { name: "Dione", email: "dione@loreal.com", role: "BP" };
 
 const STAGE_APPROVERS = {
-  nominated: "HR Local",
-  first_validation: "Zone Forum",
-  zone_validation: "Global Team",
+  nominated: "PDL Country",
+  country_hrd_validation: "Country HRD",
+  zone_validation: "Zone HRDs + PDL",
   final: "Approved",
 };
 
 const STAGE_DESCRIPTIONS = {
-  nominated: "Aguardando 1ª Validação - HR Local",
-  first_validation: "Aguardando Validação do Fórum de Zona",
-  zone_validation: "Aguardando Aprovação Final - Global",
+  nominated: "Aguardando Validação - PDL Country",
+  country_hrd_validation: "Aguardando Validação - Country HRD",
+  zone_validation: "Aguardando Aprovação - Zone HRDs + PDL",
   final: "Aprovado - Vaga Confirmada",
 };
 
@@ -79,18 +96,12 @@ const generateEmployees = () => {
       completedCourses: completedCourses[i % completedCourses.length] ? [completedCourses[i % completedCourses.length]] : [],
       email: `${fn.toLowerCase()}.${ln.toLowerCase()}@loreal.com`,
       bp: `BP-${String((i % 5) + 1).padStart(3, "0")}`,
+      keyPlayer: i % 3 === 0 || i % 7 === 0,
     };
   });
 };
 
 const EMPLOYEES = generateEmployees();
-
-const WORKFLOW_STAGES = [
-  { key: "nominated", label: "Nominated", icon: "📋" },
-  { key: "first_validation", label: "1st Validation", icon: "✅" },
-  { key: "zone_validation", label: "Zone Validation", icon: "🌍" },
-  { key: "final", label: "Final", icon: "🏆" },
-];
 
 // ==================== SCORING ====================
 const calcScore = (emp) => {
@@ -123,6 +134,94 @@ const checkEligibility = (emp, course) => {
   }
   return { eligible: reasons.length === 0, reasons };
 };
+
+const calcDelta = (current, previous) => {
+  if (previous === 0) return { pct: current > 0 ? 100 : 0, direction: "up" };
+  const pct = Math.round(((current - previous) / previous) * 100);
+  return { pct: Math.abs(pct), direction: pct >= 0 ? "up" : "down" };
+};
+
+const generateMockNominations = () => {
+  const mockDefs = [
+    { empIdx: 0, courseId: 1, status: "final", priority: 1, role: "Head" },
+    { empIdx: 1, courseId: 2, status: "zone_validation", priority: 2, role: "BP" },
+    { empIdx: 2, courseId: 3, status: "country_hrd_validation", priority: null, role: "BP" },
+    { empIdx: 5, courseId: 1, status: "nominated", priority: 3, role: "Head" },
+    { empIdx: 6, courseId: 4, status: "final", priority: 1, role: "BP" },
+    { empIdx: 8, courseId: 5, status: "rejected", priority: null, role: "BP" },
+    { empIdx: 10, courseId: 2, status: "nominated", priority: null, role: "Head" },
+    { empIdx: 12, courseId: 6, status: "country_hrd_validation", priority: 4, role: "BP" },
+    { empIdx: 15, courseId: 7, status: "zone_validation", priority: 2, role: "BP" },
+    { empIdx: 18, courseId: 8, status: "final", priority: 1, role: "Head" },
+    { empIdx: 20, courseId: 1, status: "nominated", priority: null, role: "BP" },
+    { empIdx: 22, courseId: 3, status: "rejected", priority: null, role: "BP" },
+    { empIdx: 25, courseId: 5, status: "country_hrd_validation", priority: 3, role: "Head" },
+    { empIdx: 28, courseId: 4, status: "zone_validation", priority: null, role: "BP" },
+    { empIdx: 30, courseId: 2, status: "final", priority: 2, role: "BP" },
+    { empIdx: 33, courseId: 7, status: "nominated", priority: 5, role: "Head" },
+    { empIdx: 35, courseId: 6, status: "country_hrd_validation", priority: null, role: "BP" },
+    { empIdx: 38, courseId: 8, status: "rejected", priority: null, role: "BP" },
+  ];
+  const stages = ["nominated", "country_hrd_validation", "zone_validation", "final"];
+  const stageLabels = { nominated: "PDL Country", country_hrd_validation: "Country HRD", zone_validation: "Zone HRDs + PDL" };
+
+  return mockDefs.map((def, i) => {
+    const emp = EMPLOYEES[def.empIdx];
+    const course = COURSES.find(c => c.id === def.courseId);
+    const elig = checkEligibility(emp, course);
+    const baseDate = new Date(2026, 0, 10 + i * 2);
+    const history = [{ action: "created", userId: "dione@loreal.com", userName: "Dione", timestamp: baseDate.toISOString(), details: `Nomeado para ${course.name}` }];
+
+    const stageIdx = stages.indexOf(def.status);
+    if (def.status === "rejected") {
+      const rejectAt = Math.min(1, stages.length - 1);
+      for (let s = 0; s < rejectAt; s++) {
+        const d = new Date(baseDate.getTime() + (s + 1) * 86400000 * 3);
+        history.push({ action: "status_advanced", userId: "dione@loreal.com", userName: "Dione", timestamp: d.toISOString(), details: `Status: ${stages[s]} → ${stages[s + 1]}` });
+      }
+      const rejDate = new Date(baseDate.getTime() + (rejectAt + 1) * 86400000 * 3);
+      history.push({ action: "rejected", userId: "dione@loreal.com", userName: "Dione", timestamp: rejDate.toISOString(), details: "Rejeitado: Restrição orçamentária para o ciclo atual" });
+    } else {
+      for (let s = 0; s < stageIdx; s++) {
+        const d = new Date(baseDate.getTime() + (s + 1) * 86400000 * 3);
+        history.push({ action: "status_advanced", userId: "dione@loreal.com", userName: "Dione", timestamp: d.toISOString(), details: `Status: ${stages[s]} → ${stages[s + 1]}` });
+      }
+    }
+
+    if (def.priority) {
+      const pDate = new Date(baseDate.getTime() + 86400000 * 2);
+      history.push({ action: "priority_changed", userId: "dione@loreal.com", userName: "Dione", timestamp: pDate.toISOString(), details: `Prioridade: ${def.priority}` });
+    }
+
+    return {
+      id: `NOM-${String(i + 1).padStart(4, "0")}`,
+      employeeId: emp.id,
+      employeeName: emp.name,
+      courseId: course.id,
+      courseName: course.name,
+      investment: course.investment,
+      eligible: elig.eligible,
+      outOfTarget: !elig.eligible,
+      overrideReason: !elig.eligible ? "Mudança de cargo mapeada, ainda não refletida no sistema" : null,
+      score: calcScore(emp),
+      status: def.status,
+      date: baseDate.toISOString().slice(0, 10),
+      justification: "Potencial identificado pela liderança para desenvolvimento acelerado",
+      nominatorRole: def.role,
+      priority: def.priority,
+      rejectionReason: def.status === "rejected" ? "Restrição orçamentária para o ciclo atual" : "",
+      history,
+    };
+  });
+};
+
+const INITIAL_NOMINATIONS = generateMockNominations();
+
+const WORKFLOW_STAGES = [
+  { key: "nominated", label: "PDL Country Nomination", icon: "📋" },
+  { key: "country_hrd_validation", label: "Country HRD Validation", icon: "✅" },
+  { key: "zone_validation", label: "Zone HRDs + PDL Validation", icon: "🌍" },
+];
 
 // ==================== STYLES ====================
 const colors = {
@@ -246,10 +345,24 @@ const SeatGauge = ({ used, total, label }) => {
 };
 
 // ==================== NOMINATION FORM (shared) ====================
-const NominationMiniForm = ({ onConfirm, onCancel }) => {
+const NominationMiniForm = ({ onConfirm, onCancel, requireOverrideReason = false }) => {
   const [justText, setJustText] = useState("");
+  const [overrideReason, setOverrideReason] = useState("");
+  const canConfirm = justText.trim() && (!requireOverrideReason || overrideReason.trim());
   return (
-    <div style={{ marginTop: 10, padding: 14, background: colors.medGray, borderRadius: 8, border: `1px solid ${colors.gold}44` }}>
+    <div style={{ marginTop: 10, padding: 14, background: colors.medGray, borderRadius: 8, border: `1px solid ${requireOverrideReason ? colors.warning + "66" : colors.gold + "44"}` }}>
+      {requireOverrideReason && (
+        <div style={{ marginBottom: 10, padding: "8px 12px", background: `${colors.warning}15`, borderRadius: 6, border: `1px solid ${colors.warning}33` }}>
+          <div style={{ fontSize: 11, color: colors.warning, fontWeight: 600, marginBottom: 6 }}>Fora do Target — Motivo da exceção (obrigatório)</div>
+          <textarea
+            value={overrideReason}
+            onChange={e => setOverrideReason(e.target.value)}
+            placeholder="Ex: Mudança de cargo mapeada, ainda não refletida no sistema..."
+            rows={2}
+            style={{ width: "100%", padding: 10, background: colors.darkGray, border: `1px solid ${colors.warning}44`, borderRadius: 6, color: colors.white, fontSize: 12, resize: "vertical", outline: "none", boxSizing: "border-box" }}
+          />
+        </div>
+      )}
       <textarea
         value={justText}
         onChange={e => setJustText(e.target.value)}
@@ -264,8 +377,8 @@ const NominationMiniForm = ({ onConfirm, onCancel }) => {
             style={{ padding: "6px 14px", background: colors.darkGray, color: colors.silver, border: "1px solid #444", borderRadius: 4, fontSize: 11, cursor: "pointer" }}>
             Cancelar
           </button>
-          <button onClick={() => onConfirm(justText, CURRENT_USER.role)}
-            style={{ padding: "6px 14px", background: colors.gold, color: colors.black, border: "none", borderRadius: 4, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+          <button onClick={() => canConfirm && onConfirm(justText, CURRENT_USER.role, overrideReason || null)}
+            style={{ padding: "6px 14px", background: canConfirm ? colors.gold : colors.gray, color: colors.black, border: "none", borderRadius: 4, fontSize: 11, fontWeight: 700, cursor: canConfirm ? "pointer" : "not-allowed" }}>
             Confirmar
           </button>
         </div>
@@ -292,6 +405,18 @@ const DashboardPage = ({ nominations, onNavigate }) => {
     const emp = EMPLOYEES.find(e => e.id === n.employeeId);
     if (emp) { byTalent[emp.talentClass] = (byTalent[emp.talentClass] || 0) + 1; }
   });
+  const byDivision = {};
+  nominations.forEach(n => {
+    const emp = EMPLOYEES.find(e => e.id === n.employeeId);
+    if (emp) {
+      if (!byDivision[emp.division]) byDivision[emp.division] = { count: 0, investment: 0 };
+      byDivision[emp.division].count++;
+      byDivision[emp.division].investment += n.investment;
+    }
+  });
+
+  const nomDelta = calcDelta(nominations.length, PREVIOUS_YEAR_DATA.totals.nominations);
+  const invDelta = calcDelta(totalInvestment, PREVIOUS_YEAR_DATA.totals.investment);
 
   return (
     <div>
@@ -303,8 +428,8 @@ const DashboardPage = ({ nominations, onNavigate }) => {
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 28 }}>
-        <StatCard icon="📊" label="Nominations" value={nominations.length} sub={`${pendingCount} pending`} />
-        <StatCard icon="💰" label="Investment" value={`$${(totalInvestment / 1000).toFixed(0)}K`} sub={`of $850K budget`} />
+        <StatCard icon="📊" label="Nominations" value={nominations.length} sub={`${pendingCount} pending • ${nomDelta.direction === "up" ? "▲" : "▼"} ${nomDelta.pct}% vs ${PREVIOUS_YEAR_DATA.totals.nominations} ano anterior`} />
+        <StatCard icon="💰" label="Investment" value={`$${(totalInvestment / 1000).toFixed(0)}K`} sub={`of $850K • ${invDelta.direction === "up" ? "▲" : "▼"} ${invDelta.pct}% vs $${(PREVIOUS_YEAR_DATA.totals.investment / 1000).toFixed(0)}K anterior`} />
         <StatCard icon="✅" label="Approved" value={approvedCount} sub={`${nominations.length ? Math.round((approvedCount / nominations.length) * 100) : 0}% rate`} />
       </div>
 
@@ -355,29 +480,47 @@ const DashboardPage = ({ nominations, onNavigate }) => {
         </Card>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
         <Card>
           <div style={{ fontSize: 13, color: colors.lightGray, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16, fontWeight: 600 }}>
             By Country
           </div>
-          {Object.entries(byCountry).sort((a, b) => b[1] - a[1]).map(([country, count]) => (
-            <div key={country} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${colors.medGray}` }}>
-              <span style={{ color: colors.silver, fontSize: 13 }}>{country}</span>
-              <span style={{ color: colors.white, fontWeight: 700, fontSize: 13 }}>{count}</span>
-            </div>
-          ))}
+          {ZONES[0].countries.map(country => {
+            const count = byCountry[country] || 0;
+            const prev = PREVIOUS_YEAR_DATA.byCountry[country];
+            const d = prev ? calcDelta(count, prev.nominations) : null;
+            return (
+              <div key={country} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${colors.medGray}` }}>
+                <span style={{ color: colors.silver, fontSize: 13 }}>{country}</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ color: colors.white, fontWeight: 700, fontSize: 13 }}>{count}</span>
+                  {d && <span style={{ fontSize: 10, color: d.direction === "up" ? colors.success : colors.danger }}>{d.direction === "up" ? "▲" : "▼"}{d.pct}%</span>}
+                  {prev && <span style={{ fontSize: 10, color: colors.lightGray }}>({prev.nominations})</span>}
+                </div>
+              </div>
+            );
+          })}
           {Object.keys(byCountry).length === 0 && <p style={{ color: colors.lightGray, fontSize: 12, fontStyle: "italic" }}>No nominations yet</p>}
         </Card>
         <Card>
           <div style={{ fontSize: 13, color: colors.lightGray, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16, fontWeight: 600 }}>
             By Course (Top 5)
           </div>
-          {Object.entries(byCourse).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([name, count]) => (
-            <div key={name} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${colors.medGray}` }}>
-              <span style={{ color: colors.silver, fontSize: 12, maxWidth: 180, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{name}</span>
-              <span style={{ color: colors.white, fontWeight: 700, fontSize: 13 }}>{count}</span>
-            </div>
-          ))}
+          {Object.entries(byCourse).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([name, count]) => {
+            const course = COURSES.find(c => c.name === name);
+            const prev = course ? PREVIOUS_YEAR_DATA.byCourse[course.id] : null;
+            const d = prev ? calcDelta(count, prev.nominations) : null;
+            return (
+              <div key={name} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${colors.medGray}` }}>
+                <span style={{ color: colors.silver, fontSize: 12, maxWidth: 160, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{name}</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ color: colors.white, fontWeight: 700, fontSize: 13 }}>{count}</span>
+                  {d && <span style={{ fontSize: 10, color: d.direction === "up" ? colors.success : colors.danger }}>{d.direction === "up" ? "▲" : "▼"}{d.pct}%</span>}
+                  {prev && <span style={{ fontSize: 10, color: colors.lightGray }}>({prev.nominations})</span>}
+                </div>
+              </div>
+            );
+          })}
           {Object.keys(byCourse).length === 0 && <p style={{ color: colors.lightGray, fontSize: 12, fontStyle: "italic" }}>No nominations yet</p>}
         </Card>
         <Card>
@@ -390,6 +533,21 @@ const DashboardPage = ({ nominations, onNavigate }) => {
               <span style={{ color: colors.white, fontWeight: 700, fontSize: 13 }}>{byTalent[tc] || 0}</span>
             </div>
           ))}
+        </Card>
+        <Card>
+          <div style={{ fontSize: 13, color: colors.lightGray, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16, fontWeight: 600 }}>
+            By Professional Field
+          </div>
+          {Object.entries(byDivision).sort((a, b) => b[1].count - a[1].count).map(([div, data]) => (
+            <div key={div} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${colors.medGray}` }}>
+              <span style={{ color: colors.silver, fontSize: 12 }}>{div}</span>
+              <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                <span style={{ fontSize: 10, color: colors.lightGray }}>${(data.investment / 1000).toFixed(0)}K</span>
+                <span style={{ color: colors.white, fontWeight: 700, fontSize: 13 }}>{data.count}</span>
+              </div>
+            </div>
+          ))}
+          {Object.keys(byDivision).length === 0 && <p style={{ color: colors.lightGray, fontSize: 12, fontStyle: "italic" }}>No nominations yet</p>}
         </Card>
       </div>
     </div>
@@ -467,16 +625,25 @@ const CourseCatalog = ({ onSelectCourse, nominations = [] }) => {
 const CourseNominationView = ({ course, nominations, onNominate, onBack }) => {
   const [search, setSearch] = useState("");
   const [nominatingEmpId, setNominatingEmpId] = useState(null);
+  const [showNonEligible, setShowNonEligible] = useState(false);
 
-  const eligibleEmployees = useMemo(() => {
+  const allEmployeesWithEligibility = useMemo(() => {
     return EMPLOYEES.map(emp => {
       const elig = checkEligibility(emp, course);
       const alreadyNominated = nominations.some(n => n.employeeId === emp.id && n.courseId === course.id);
       return { ...emp, ...elig, alreadyNominated };
-    }).filter(emp => emp.eligible);
+    });
   }, [course, nominations]);
 
+  const eligibleEmployees = allEmployeesWithEligibility.filter(e => e.eligible);
+  const nonEligibleEmployees = allEmployeesWithEligibility.filter(e => !e.eligible);
+
   const filtered = eligibleEmployees.filter(e => {
+    if (search && !e.name.toLowerCase().includes(search.toLowerCase()) && !e.id.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  });
+
+  const filteredNonEligible = nonEligibleEmployees.filter(e => {
     if (search && !e.name.toLowerCase().includes(search.toLowerCase()) && !e.id.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
@@ -508,9 +675,13 @@ const CourseNominationView = ({ course, nominations, onNominate, onBack }) => {
         </div>
       </Card>
 
-      <div style={{ marginBottom: 16 }}>
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search eligible employees..."
-          style={{ width: "100%", padding: "10px 16px", background: colors.medGray, border: "1px solid #444", borderRadius: 6, color: colors.white, fontSize: 13, outline: "none", boxSizing: "border-box" }} />
+      <div style={{ display: "flex", gap: 12, marginBottom: 16, alignItems: "center" }}>
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search employees..."
+          style={{ flex: 1, padding: "10px 16px", background: colors.medGray, border: "1px solid #444", borderRadius: 6, color: colors.white, fontSize: 13, outline: "none", boxSizing: "border-box" }} />
+        <button onClick={() => setShowNonEligible(!showNonEligible)}
+          style={{ padding: "10px 16px", borderRadius: 6, border: `1px solid ${showNonEligible ? colors.warning : "#444"}`, background: showNonEligible ? `${colors.warning}22` : colors.medGray, color: showNonEligible ? colors.warning : colors.silver, fontSize: 12, cursor: "pointer", fontWeight: 600, whiteSpace: "nowrap" }}>
+          {showNonEligible ? "Ocultar" : "Mostrar"} Não Elegíveis ({nonEligibleEmployees.length})
+        </button>
       </div>
 
       <div style={{ display: "grid", gap: 8 }}>
@@ -540,8 +711,8 @@ const CourseNominationView = ({ course, nominations, onNominate, onBack }) => {
             </div>
             {nominatingEmpId === emp.id && (
               <NominationMiniForm
-                onConfirm={(justText, nominatorRole) => {
-                  onNominate(emp, course, justText, nominatorRole);
+                onConfirm={(justText, nominatorRole, overrideReason) => {
+                  onNominate(emp, course, justText, nominatorRole, overrideReason);
                   setNominatingEmpId(null);
                 }}
                 onCancel={() => setNominatingEmpId(null)}
@@ -549,13 +720,62 @@ const CourseNominationView = ({ course, nominations, onNominate, onBack }) => {
             )}
           </Card>
         ))}
-        {filtered.length === 0 && (
+        {filtered.length === 0 && !showNonEligible && (
           <Card style={{ textAlign: "center", padding: 40 }}>
             <div style={{ fontSize: 32, marginBottom: 8 }}>📚</div>
             <div style={{ color: colors.lightGray, fontSize: 14 }}>No eligible employees found</div>
           </Card>
         )}
       </div>
+
+      {showNonEligible && (
+        <div style={{ marginTop: 24 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+            <div style={{ height: 1, flex: 1, background: `${colors.warning}44` }} />
+            <span style={{ fontSize: 11, color: colors.warning, textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>Fora do Target ({filteredNonEligible.length})</span>
+            <div style={{ height: 1, flex: 1, background: `${colors.warning}44` }} />
+          </div>
+          <div style={{ display: "grid", gap: 8 }}>
+            {filteredNonEligible.map(emp => (
+              <Card key={emp.id} style={{ padding: 16, borderColor: `${colors.warning}33` }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{ width: 40, height: 40, borderRadius: "50%", background: `linear-gradient(135deg, ${colors.warning}44, ${colors.warning}22)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: colors.warning }}>
+                      {emp.name.split(" ").map(n => n[0]).join("")}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: colors.white }}>{emp.name}</div>
+                      <div style={{ fontSize: 11, color: colors.lightGray }}>{emp.title} • {emp.country}</div>
+                      <div style={{ fontSize: 10, color: colors.danger, marginTop: 2 }}>{emp.reasons.join(" • ")}</div>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <Badge variant="warning" size="xs">Fora do Target</Badge>
+                    {emp.alreadyNominated ? (
+                      <Badge variant="success" size="xs">✓ Nominated</Badge>
+                    ) : nominatingEmpId === emp.id ? null : (
+                      <button onClick={() => setNominatingEmpId(emp.id)}
+                        style={{ padding: "6px 14px", background: colors.warning, color: colors.black, border: "none", borderRadius: 4, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                        Nomear (Exceção)
+                      </button>
+                    )}
+                  </div>
+                </div>
+                {nominatingEmpId === emp.id && (
+                  <NominationMiniForm
+                    requireOverrideReason
+                    onConfirm={(justText, nominatorRole, overrideReason) => {
+                      onNominate(emp, course, justText, nominatorRole, overrideReason);
+                      setNominatingEmpId(null);
+                    }}
+                    onCancel={() => setNominatingEmpId(null)}
+                  />
+                )}
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -652,19 +872,20 @@ const EmployeeDirectory = ({ nominations, onNominate }) => {
                       {!eligible && <div style={{ fontSize: 10, color: colors.danger, marginTop: 2 }}>{reasons.join(" • ")}</div>}
                     </div>
                     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                      {eligible ? <Badge variant="success" size="xs">Eligible</Badge> : <Badge variant="danger" size="xs">Not Eligible</Badge>}
-                      {eligible && !nominated.find(n => n.courseId === course.id) && nominatingCourseId !== course.id && (
+                      {eligible ? <Badge variant="success" size="xs">Eligible</Badge> : <Badge variant="warning" size="xs">Fora do Target</Badge>}
+                      {!nominated.find(n => n.courseId === course.id) && nominatingCourseId !== course.id && (
                         <button onClick={() => setNominatingCourseId(course.id)}
-                          style={{ padding: "4px 10px", background: colors.gold, color: colors.black, border: "none", borderRadius: 4, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
-                          Nominate
+                          style={{ padding: "4px 10px", background: eligible ? colors.gold : colors.warning, color: colors.black, border: "none", borderRadius: 4, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                          {eligible ? "Nominate" : "Nomear (Exceção)"}
                         </button>
                       )}
                     </div>
                   </div>
                   {nominatingCourseId === course.id && (
                     <NominationMiniForm
-                      onConfirm={(justText, nominatorRole) => {
-                        onNominate(emp, course, justText, nominatorRole);
+                      requireOverrideReason={!eligible}
+                      onConfirm={(justText, nominatorRole, overrideReason) => {
+                        onNominate(emp, course, justText, nominatorRole, overrideReason);
                         setNominatingCourseId(null);
                       }}
                       onCancel={() => setNominatingCourseId(null)}
@@ -737,7 +958,29 @@ const EmployeeDirectory = ({ nominations, onNominate }) => {
   );
 };
 
-// ==================== NOMINATION PAGE (Change 8) ====================
+// ==================== NOMINATION HISTORY ====================
+const NomHistory = ({ history }) => {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <div style={{ marginTop: 12, borderTop: `1px solid #333`, paddingTop: 10 }}>
+      <button onClick={() => setExpanded(!expanded)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 10, color: colors.lightGray, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600, padding: 0, display: "flex", alignItems: "center", gap: 4 }}>
+        <span>{expanded ? "▼" : "▶"}</span> Histórico ({history.length})
+      </button>
+      {expanded && (
+        <div style={{ marginTop: 8 }}>
+          {history.map((h, i) => (
+            <div key={i} style={{ fontSize: 11, color: colors.silver, padding: "5px 0", display: "flex", justifyContent: "space-between", borderBottom: i < history.length - 1 ? `1px solid ${colors.medGray}` : "none" }}>
+              <span>{h.details} — <span style={{ color: colors.gold }}>{h.userName}</span> <span style={{ color: colors.lightGray }}>({h.userId})</span></span>
+              <span style={{ color: colors.lightGray, fontSize: 10, whiteSpace: "nowrap", marginLeft: 12 }}>{new Date(h.timestamp).toLocaleString("pt-BR")}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ==================== NOMINATION PAGE ====================
 const NominationPage = ({ nominations, setNominations }) => {
   const [filterStatus, setFilterStatus] = useState("All");
   const [filterNominator, setFilterNominator] = useState("All");
@@ -746,9 +989,9 @@ const NominationPage = ({ nominations, setNominations }) => {
   const [rejectReason, setRejectReason] = useState("");
   const [sortByPriority, setSortByPriority] = useState(false);
 
-  const statuses = ["All", "nominated", "first_validation", "zone_validation", "final", "rejected"];
-  const statusLabels = { nominated: "Nominated", first_validation: "1st Validation", zone_validation: "Zone Validation", final: "Final", rejected: "Rejected" };
-  const statusColors = { nominated: "info", first_validation: "warning", zone_validation: "success", final: "gold", rejected: "danger" };
+  const statuses = ["All", "nominated", "country_hrd_validation", "zone_validation", "final", "rejected"];
+  const statusLabels = { nominated: "PDL Country", country_hrd_validation: "Country HRD", zone_validation: "Zone HRDs + PDL", final: "Confirmado", rejected: "Rejected" };
+  const statusColors = { nominated: "info", country_hrd_validation: "warning", zone_validation: "success", final: "gold", rejected: "danger" };
 
   const filtered = nominations.filter(n => {
     if (filterStatus !== "All" && n.status !== filterStatus) return false;
@@ -768,21 +1011,42 @@ const NominationPage = ({ nominations, setNominations }) => {
   const advanceStatus = (nomId) => {
     setNominations(prev => prev.map(n => {
       if (n.id !== nomId) return n;
-      const stages = ["nominated", "first_validation", "zone_validation", "final"];
+      const stages = ["nominated", "country_hrd_validation", "zone_validation", "final"];
       const idx = stages.indexOf(n.status);
-      if (idx < stages.length - 1) return { ...n, status: stages[idx + 1] };
+      if (idx < stages.length - 1) {
+        const nextStatus = stages[idx + 1];
+        return { ...n, status: nextStatus, history: [...(n.history || []), {
+          action: "status_advanced",
+          userId: CURRENT_USER.email,
+          userName: CURRENT_USER.name,
+          timestamp: new Date().toISOString(),
+          details: `Status: ${n.status} → ${nextStatus}`,
+        }]};
+      }
       return n;
     }));
   };
 
   const rejectNom = (nomId, reason) => {
-    setNominations(prev => prev.map(n => n.id === nomId ? { ...n, status: "rejected", rejectionReason: reason } : n));
+    setNominations(prev => prev.map(n => n.id === nomId ? { ...n, status: "rejected", rejectionReason: reason, history: [...(n.history || []), {
+      action: "rejected",
+      userId: CURRENT_USER.email,
+      userName: CURRENT_USER.name,
+      timestamp: new Date().toISOString(),
+      details: `Rejeitado: ${reason}`,
+    }]} : n));
     setRejectingId(null);
     setRejectReason("");
   };
 
   const updatePriority = (nomId, priority) => {
-    setNominations(prev => prev.map(n => n.id === nomId ? { ...n, priority: priority || null } : n));
+    setNominations(prev => prev.map(n => n.id === nomId ? { ...n, priority: priority || null, history: [...(n.history || []), {
+      action: "priority_changed",
+      userId: CURRENT_USER.email,
+      userName: CURRENT_USER.name,
+      timestamp: new Date().toISOString(),
+      details: `Prioridade: ${priority || "removida"}`,
+    }]} : n));
   };
 
   const NomCard = ({ nom }) => {
@@ -871,6 +1135,10 @@ const NominationPage = ({ nominations, setNominations }) => {
             </div>
           </div>
         )}
+        {nom.outOfTarget && <Badge variant="warning" size="xs">Fora do Target</Badge>}
+        {nom.history && nom.history.length > 0 && (
+          <NomHistory history={nom.history} />
+        )}
       </Card>
     );
   };
@@ -896,7 +1164,7 @@ const NominationPage = ({ nominations, setNominations }) => {
 
       <Card style={{ marginBottom: 20, padding: 20 }}>
         <WorkflowTracker currentStage={1} />
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginTop: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginTop: 16 }}>
           {WORKFLOW_STAGES.map(s => (
             <div key={s.key} style={{ textAlign: "center", padding: 8, background: colors.medGray, borderRadius: 6 }}>
               <div style={{ fontSize: 10, color: colors.lightGray, lineHeight: 1.4 }}>{STAGE_DESCRIPTIONS[s.key]}</div>
@@ -990,7 +1258,132 @@ const CourseGroup = ({ course, noms, NomCard, nominations }) => {
   );
 };
 
-// ==================== SEATS OVERVIEW (Change 4/7) ====================
+// ==================== PDL LATAM PAGE ====================
+const PDLLatamPage = ({ nominations }) => {
+  const keyPlayers = EMPLOYEES.filter(e => e.keyPlayer);
+  const keyPlayerIds = new Set(keyPlayers.map(e => e.id));
+  const activeNoms = nominations.filter(n => n.status !== "rejected");
+  const keyPlayerNoms = activeNoms.filter(n => keyPlayerIds.has(n.employeeId));
+  const keyPlayersWithNom = new Set(keyPlayerNoms.map(n => n.employeeId));
+  const coverage = keyPlayers.length > 0 ? Math.round((keyPlayersWithNom.size / keyPlayers.length) * 100) : 0;
+
+  const byCountry = {};
+  keyPlayerNoms.forEach(n => {
+    const emp = EMPLOYEES.find(e => e.id === n.employeeId);
+    if (emp) byCountry[emp.country] = (byCountry[emp.country] || 0) + 1;
+  });
+  const byCourse = {};
+  keyPlayerNoms.forEach(n => { byCourse[n.courseName] = (byCourse[n.courseName] || 0) + 1; });
+  const byTalent = {};
+  keyPlayers.forEach(e => { byTalent[e.talentClass] = (byTalent[e.talentClass] || 0) + 1; });
+  const byRisk = {};
+  keyPlayers.forEach(e => { byRisk[e.flightRisk] = (byRisk[e.flightRisk] || 0) + 1; });
+
+  const riskColors = { High: "danger", Medium: "warning", Low: "success" };
+  const talentColors = { "Future Leaders": "gold", "Rising Players": "info", "Essential Players": "warning" };
+
+  return (
+    <div>
+      <div style={{ marginBottom: 32 }}>
+        <h2 style={{ fontSize: 24, fontWeight: 300, color: colors.white, margin: 0, fontFamily: "'Playfair Display', serif" }}>
+          PDL <span style={{ color: colors.gold }}>LATAM</span>
+        </h2>
+        <p style={{ color: colors.lightGray, fontSize: 13, marginTop: 4 }}>Key Player Analytics — Visão consolidada</p>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 28 }}>
+        <StatCard icon="🔑" label="Key Players" value={keyPlayers.length} sub={`de ${EMPLOYEES.length} total`} />
+        <StatCard icon="📊" label="Coverage" value={`${coverage}%`} sub={`${keyPlayersWithNom.size} de ${keyPlayers.length} nomeados`} />
+        <StatCard icon="📋" label="Nomeações KP" value={keyPlayerNoms.length} sub={`${activeNoms.length} total ativas`} />
+        <StatCard icon="💰" label="Investimento KP" value={`$${(keyPlayerNoms.reduce((s, n) => s + n.investment, 0) / 1000).toFixed(0)}K`} sub="Key Players" />
+      </div>
+
+      <Card style={{ marginBottom: 28, padding: 28 }}>
+        <div style={{ fontSize: 13, color: colors.lightGray, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16, fontWeight: 600 }}>
+          Key Player Coverage por País
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-around", flexWrap: "wrap", gap: 12 }}>
+          {ZONES[0].countries.map(country => {
+            const countryKP = keyPlayers.filter(e => e.country === country);
+            const countryKPNom = countryKP.filter(e => keyPlayersWithNom.has(e.id));
+            return <SeatGauge key={country} used={countryKPNom.length} total={countryKP.length} label={country} />;
+          })}
+        </div>
+      </Card>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 28 }}>
+        <Card>
+          <div style={{ fontSize: 13, color: colors.lightGray, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16, fontWeight: 600 }}>
+            KP por País
+          </div>
+          {ZONES[0].countries.map(country => (
+            <div key={country} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${colors.medGray}` }}>
+              <span style={{ color: colors.silver, fontSize: 13 }}>{country}</span>
+              <span style={{ color: colors.white, fontWeight: 700, fontSize: 13 }}>{byCountry[country] || 0}</span>
+            </div>
+          ))}
+        </Card>
+        <Card>
+          <div style={{ fontSize: 13, color: colors.lightGray, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16, fontWeight: 600 }}>
+            KP por Talent Class
+          </div>
+          {TALENT_CLASSES.map(tc => (
+            <div key={tc} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${colors.medGray}` }}>
+              <Badge variant={talentColors[tc]} size="xs">{tc}</Badge>
+              <span style={{ color: colors.white, fontWeight: 700, fontSize: 13 }}>{byTalent[tc] || 0}</span>
+            </div>
+          ))}
+        </Card>
+        <Card>
+          <div style={{ fontSize: 13, color: colors.lightGray, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16, fontWeight: 600 }}>
+            KP por Flight Risk
+          </div>
+          {RISK_LEVELS.map(r => (
+            <div key={r} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${colors.medGray}` }}>
+              <Badge variant={riskColors[r]} size="xs">{r}</Badge>
+              <span style={{ color: colors.white, fontWeight: 700, fontSize: 13 }}>{byRisk[r] || 0}</span>
+            </div>
+          ))}
+        </Card>
+      </div>
+
+      <Card>
+        <div style={{ fontSize: 13, color: colors.lightGray, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16, fontWeight: 600 }}>
+          Key Players — Status de Nomeação
+        </div>
+        <div style={{ display: "grid", gap: 6 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 130px 100px 100px 100px", gap: 12, padding: "8px 12px", fontSize: 10, color: colors.lightGray, textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>
+            <span>Employee</span><span>Classification</span><span>Country</span><span>Flight Risk</span><span>Status</span>
+          </div>
+          {keyPlayers.map(emp => {
+            const empNoms = activeNoms.filter(n => n.employeeId === emp.id);
+            const hasNom = empNoms.length > 0;
+            return (
+              <div key={emp.id} style={{ display: "grid", gridTemplateColumns: "1fr 130px 100px 100px 100px", gap: 12, padding: "10px 12px", background: colors.darkGray, borderRadius: 6, alignItems: "center", borderLeft: `3px solid ${hasNom ? colors.success : colors.danger}` }}>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: colors.white }}>{emp.name}</div>
+                  <div style={{ fontSize: 11, color: colors.lightGray }}>{emp.title}</div>
+                </div>
+                <Badge variant={talentColors[emp.talentClass]} size="xs">{emp.talentClass}</Badge>
+                <span style={{ fontSize: 12, color: colors.silver }}>{emp.country}</span>
+                <Badge variant={riskColors[emp.flightRisk]} size="xs">{emp.flightRisk}</Badge>
+                <div>
+                  {hasNom ? (
+                    <Badge variant="success" size="xs">{empNoms.length} nom.</Badge>
+                  ) : (
+                    <Badge variant="danger" size="xs">Sem nomeação</Badge>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+// ==================== SEATS OVERVIEW ====================
 const SeatsOverviewPage = ({ nominations }) => {
   const totalSeatsUsed = nominations.filter(n => n.status !== "rejected").length;
   const totalSeats = COUNTRY_SEATS.reduce((s, c) => s + c.seats, 0);
@@ -1237,7 +1630,7 @@ const LoginScreen = ({ onLogin }) => {
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [page, setPage] = useState("dashboard");
-  const [nominations, setNominations] = useState([]);
+  const [nominations, setNominations] = useState(() => [...INITIAL_NOMINATIONS]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [toast, setToast] = useState(null);
 
@@ -1246,8 +1639,9 @@ export default function App() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  const handleNominate = (emp, course, justification = "", nominatorRole = "BP") => {
+  const handleNominate = (emp, course, justification = "", nominatorRole = "BP", overrideReason = null) => {
     const elig = checkEligibility(emp, course);
+    const now = new Date().toISOString();
     const newNom = {
       id: `NOM-${String(nominations.length + 1).padStart(4, "0")}`,
       employeeId: emp.id,
@@ -1256,13 +1650,22 @@ export default function App() {
       courseName: course.name,
       investment: course.investment,
       eligible: elig.eligible,
+      outOfTarget: !elig.eligible,
+      overrideReason: !elig.eligible ? overrideReason : null,
       score: calcScore(emp),
       status: "nominated",
-      date: new Date().toISOString().slice(0, 10),
+      date: now.slice(0, 10),
       justification,
       nominatorRole,
       priority: null,
       rejectionReason: "",
+      history: [{
+        action: "created",
+        userId: CURRENT_USER.email,
+        userName: CURRENT_USER.name,
+        timestamp: now,
+        details: `Nomeado para ${course.name}`,
+      }],
     };
     setNominations(prev => [...prev, newNom]);
     showToast(`✅ ${emp.name} nominated for ${course.name}`);
@@ -1276,6 +1679,7 @@ export default function App() {
     { key: "employees", label: "Employees", icon: "👥" },
     { key: "nominations", label: "Nominations", icon: "📋" },
     { key: "seats", label: "Seats", icon: "💺" },
+    { key: "pdl_latam", label: "PDL Latam", icon: "🔑" },
     { key: "criteria", label: "Criteria", icon: "⚙️" },
   ];
 
@@ -1330,6 +1734,7 @@ export default function App() {
         {page === "employees" && <EmployeeDirectory nominations={nominations} onNominate={handleNominate} />}
         {page === "nominations" && <NominationPage nominations={nominations} setNominations={setNominations} />}
         {page === "seats" && <SeatsOverviewPage nominations={nominations} />}
+        {page === "pdl_latam" && <PDLLatamPage nominations={nominations} />}
         {page === "criteria" && <CriteriaPage />}
       </div>
 
