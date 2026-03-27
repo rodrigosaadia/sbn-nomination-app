@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
+import * as XLSX from "xlsx";
 
 // ==================== DATA ====================
 const ZONES = [
@@ -43,6 +44,7 @@ const PREVIOUS_YEAR_DATA = {
 
 const TALENT_CLASSES = ["Essential Players", "Rising Players", "Future Leaders"];
 const DIVISIONS = ["Luxe", "Consumer Products", "Professional Products", "Active Cosmetics", "Operations", "Finance", "HR", "Digital"];
+const ORG_DIVISIONS = ["GPP", "PLP", "GPPCORP", "CAP", "PPP", "CPP"];
 const PERFORMANCE_RATINGS = ["Exceeds Expectations", "Strong Performer", "Meets Expectations", "Developing"];
 const RISK_LEVELS = ["High", "Medium", "Low"];
 
@@ -97,6 +99,7 @@ const generateEmployees = () => {
       email: `${fn.toLowerCase()}.${ln.toLowerCase()}@loreal.com`,
       bp: `BP-${String((i % 5) + 1).padStart(3, "0")}`,
       keyPlayer: i % 3 === 0 || i % 7 === 0,
+      orgDivision: ORG_DIVISIONS[i % ORG_DIVISIONS.length],
     };
   });
 };
@@ -387,11 +390,70 @@ const NominationMiniForm = ({ onConfirm, onCancel, requireOverrideReason = false
   );
 };
 
+// ==================== EXCEL EXPORT ====================
+const exportToExcel = (nominations) => {
+  const activeNoms = nominations
+    .filter(n => n.status !== "rejected")
+    .sort((a, b) => {
+      if (a.priority && b.priority) return a.priority - b.priority;
+      if (a.priority) return -1;
+      if (b.priority) return 1;
+      return 0;
+    });
+
+  const rows = activeNoms.map((n, idx) => {
+    const emp = EMPLOYEES.find(e => e.id === n.employeeId);
+    const nameParts = emp ? emp.name.split(" ") : ["", ""];
+    const firstName = nameParts[0] || "";
+    const surname = nameParts.slice(1).join(" ") || "";
+    const eligibility = emp ? checkEligibility(emp, COURSES.find(c => c.id === n.courseId)) : { eligible: true, reasons: [] };
+    const warning = n.outOfTarget ? (n.overrideReason || "Out of target") : (!eligibility.eligible ? eligibility.reasons.join("; ") : "");
+    return {
+      "Ranking of priority": n.priority || idx + 1,
+      "Carol ID": emp ? emp.id : "",
+      "Name": firstName,
+      "Surname": surname,
+      "Job Title": emp ? emp.title : "",
+      "SBN Program": n.courseName,
+      "Information / Warning": warning,
+      "Reasoning": n.justification || "",
+      "Experience(in months)": emp ? emp.monthsCompany : "",
+      "Name of Manager": CURRENT_USER.name,
+      "Is a Key Player?": emp && emp.keyPlayer ? "Yes" : "No",
+    };
+  });
+
+  const wb = XLSX.utils.book_new();
+  const wsData = [
+    ["2026 Seminars By Nomination Rank"],
+    [],
+    ["Ranking of priority", "Carol ID", "Name", "Surname", "Job Title", "SBN Program", "Information / Warning", "Reasoning", "Experience(in months)", "Name of Manager", "Is a Key Player?"],
+    ...rows.map(r => Object.values(r)),
+  ];
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+  ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 10 } }];
+  ws["!cols"] = [
+    { wch: 18 }, { wch: 12 }, { wch: 14 }, { wch: 14 }, { wch: 22 },
+    { wch: 32 }, { wch: 28 }, { wch: 40 }, { wch: 20 }, { wch: 18 }, { wch: 16 },
+  ];
+
+  XLSX.utils.book_append_sheet(wb, ws, "SBN Nominations");
+  XLSX.writeFile(wb, "SBN_Nominations_2026.xlsx");
+};
+
 // ==================== PAGES ====================
 const DashboardPage = ({ nominations, onNavigate }) => {
   const totalInvestment = nominations.reduce((s, n) => s + n.investment, 0);
   const approvedCount = nominations.filter(n => n.status === "final").length;
   const pendingCount = nominations.filter(n => !["final", "rejected"].includes(n.status)).length;
+  const activeNoms = nominations.filter(n => n.status !== "rejected");
+
+  const keyPlayers = EMPLOYEES.filter(e => e.keyPlayer);
+  const keyPlayerIds = new Set(keyPlayers.map(e => e.id));
+  const keyPlayerNoms = activeNoms.filter(n => keyPlayerIds.has(n.employeeId));
+  const keyPlayersWithNom = new Set(keyPlayerNoms.map(n => n.employeeId));
+  const kpCoverage = keyPlayers.length > 0 ? Math.round((keyPlayersWithNom.size / keyPlayers.length) * 100) : 0;
 
   const byCountry = {};
   nominations.forEach(n => {
@@ -414,23 +476,41 @@ const DashboardPage = ({ nominations, onNavigate }) => {
       byDivision[emp.division].investment += n.investment;
     }
   });
+  const byOrgDivision = {};
+  nominations.forEach(n => {
+    const emp = EMPLOYEES.find(e => e.id === n.employeeId);
+    if (emp) {
+      if (!byOrgDivision[emp.orgDivision]) byOrgDivision[emp.orgDivision] = { count: 0, investment: 0 };
+      byOrgDivision[emp.orgDivision].count++;
+      byOrgDivision[emp.orgDivision].investment += n.investment;
+    }
+  });
 
   const nomDelta = calcDelta(nominations.length, PREVIOUS_YEAR_DATA.totals.nominations);
   const invDelta = calcDelta(totalInvestment, PREVIOUS_YEAR_DATA.totals.investment);
 
   return (
     <div>
-      <div style={{ marginBottom: 32 }}>
-        <h2 style={{ fontSize: 24, fontWeight: 300, color: colors.white, margin: 0, fontFamily: "'Playfair Display', serif" }}>
-          Dashboard <span style={{ color: colors.gold }}>LATAM</span>
-        </h2>
-        <p style={{ color: colors.lightGray, fontSize: 13, marginTop: 4 }}>Seminar by Nomination — Consolidated zone overview</p>
+      <div style={{ marginBottom: 32, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <div>
+          <h2 style={{ fontSize: 24, fontWeight: 300, color: colors.white, margin: 0, fontFamily: "'Playfair Display', serif" }}>
+            Dashboard <span style={{ color: colors.gold }}>LATAM</span>
+          </h2>
+          <p style={{ color: colors.lightGray, fontSize: 13, marginTop: 4 }}>Seminar by Nomination — Consolidated zone overview</p>
+        </div>
+        <button
+          onClick={() => exportToExcel(nominations)}
+          style={{ padding: "10px 20px", background: `linear-gradient(135deg, ${colors.gold}, ${colors.goldLight})`, color: colors.black, border: "none", borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, letterSpacing: "0.02em" }}
+        >
+          Export Excel
+        </button>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 28 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 28 }}>
         <StatCard icon="📊" label="Nominations" value={nominations.length} sub={`${pendingCount} pending • ${nomDelta.direction === "up" ? "▲" : "▼"} ${nomDelta.pct}% vs ${PREVIOUS_YEAR_DATA.totals.nominations} ano anterior`} />
         <StatCard icon="💰" label="Investment" value={`$${(totalInvestment / 1000).toFixed(0)}K`} sub={`of $850K • ${invDelta.direction === "up" ? "▲" : "▼"} ${invDelta.pct}% vs $${(PREVIOUS_YEAR_DATA.totals.investment / 1000).toFixed(0)}K anterior`} />
         <StatCard icon="✅" label="Approved" value={approvedCount} sub={`${nominations.length ? Math.round((approvedCount / nominations.length) * 100) : 0}% rate`} />
+        <StatCard icon="🔑" label="KP Coverage" value={`${kpCoverage}%`} sub={`${keyPlayersWithNom.size} de ${keyPlayers.length} key players nomeados`} />
       </div>
 
       <Card style={{ marginBottom: 28, padding: 28 }}>
@@ -480,7 +560,7 @@ const DashboardPage = ({ nominations, onNavigate }) => {
         </Card>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
         <Card>
           <div style={{ fontSize: 13, color: colors.lightGray, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16, fontWeight: 600 }}>
             By Country
@@ -548,6 +628,20 @@ const DashboardPage = ({ nominations, onNavigate }) => {
             </div>
           ))}
           {Object.keys(byDivision).length === 0 && <p style={{ color: colors.lightGray, fontSize: 12, fontStyle: "italic" }}>No nominations yet</p>}
+        </Card>
+        <Card>
+          <div style={{ fontSize: 13, color: colors.lightGray, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16, fontWeight: 600 }}>
+            By Division
+          </div>
+          {ORG_DIVISIONS.map(div => (
+            <div key={div} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${colors.medGray}` }}>
+              <span style={{ color: colors.silver, fontSize: 12 }}>{div}</span>
+              <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                <span style={{ fontSize: 10, color: colors.lightGray }}>{byOrgDivision[div] ? `$${(byOrgDivision[div].investment / 1000).toFixed(0)}K` : "$0K"}</span>
+                <span style={{ color: colors.white, fontWeight: 700, fontSize: 13 }}>{byOrgDivision[div] ? byOrgDivision[div].count : 0}</span>
+              </div>
+            </div>
+          ))}
         </Card>
       </div>
     </div>
@@ -1278,6 +1372,15 @@ const PDLLatamPage = ({ nominations }) => {
   keyPlayers.forEach(e => { byTalent[e.talentClass] = (byTalent[e.talentClass] || 0) + 1; });
   const byRisk = {};
   keyPlayers.forEach(e => { byRisk[e.flightRisk] = (byRisk[e.flightRisk] || 0) + 1; });
+  const byOrgDivision = {};
+  keyPlayerNoms.forEach(n => {
+    const emp = EMPLOYEES.find(e => e.id === n.employeeId);
+    if (emp) {
+      if (!byOrgDivision[emp.orgDivision]) byOrgDivision[emp.orgDivision] = { count: 0, investment: 0 };
+      byOrgDivision[emp.orgDivision].count++;
+      byOrgDivision[emp.orgDivision].investment += n.investment;
+    }
+  });
 
   const riskColors = { High: "danger", Medium: "warning", Low: "success" };
   const talentColors = { "Future Leaders": "gold", "Rising Players": "info", "Essential Players": "warning" };
@@ -1311,7 +1414,7 @@ const PDLLatamPage = ({ nominations }) => {
         </div>
       </Card>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 28 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 28 }}>
         <Card>
           <div style={{ fontSize: 13, color: colors.lightGray, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16, fontWeight: 600 }}>
             KP por País
@@ -1342,6 +1445,20 @@ const PDLLatamPage = ({ nominations }) => {
             <div key={r} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${colors.medGray}` }}>
               <Badge variant={riskColors[r]} size="xs">{r}</Badge>
               <span style={{ color: colors.white, fontWeight: 700, fontSize: 13 }}>{byRisk[r] || 0}</span>
+            </div>
+          ))}
+        </Card>
+        <Card>
+          <div style={{ fontSize: 13, color: colors.lightGray, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16, fontWeight: 600 }}>
+            KP por Division
+          </div>
+          {ORG_DIVISIONS.map(div => (
+            <div key={div} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${colors.medGray}` }}>
+              <span style={{ color: colors.silver, fontSize: 12 }}>{div}</span>
+              <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                <span style={{ fontSize: 10, color: colors.lightGray }}>{byOrgDivision[div] ? `$${(byOrgDivision[div].investment / 1000).toFixed(0)}K` : "$0K"}</span>
+                <span style={{ color: colors.white, fontWeight: 700, fontSize: 13 }}>{byOrgDivision[div] ? byOrgDivision[div].count : 0}</span>
+              </div>
             </div>
           ))}
         </Card>
