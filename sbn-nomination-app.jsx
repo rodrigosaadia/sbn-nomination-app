@@ -164,6 +164,11 @@ const generateMockNominations = () => {
     { empIdx: 33, courseId: 7, status: "nominated", priority: 5, role: "Head" },
     { empIdx: 35, courseId: 6, status: "country_hrd_validation", priority: null, role: "BP" },
     { empIdx: 38, courseId: 8, status: "rejected", priority: null, role: "BP" },
+    // Fora do target — demonstração de exceções (HRBPs anteciparam mudanças ainda não refletidas no sistema)
+    { empIdx: 4, courseId: 3, status: "nominated", priority: null, role: "BP", overrideReason: "Mudança de cargo mapeada, ainda não refletida no sistema" },
+    { empIdx: 9, courseId: 3, status: "country_hrd_validation", priority: 2, role: "Head", overrideReason: "Sucessor crítico aprovado pela Zone HRD" },
+    { empIdx: 11, courseId: 8, status: "zone_validation", priority: 1, role: "BP", overrideReason: "Talento estratégico — exceção PDL" },
+    { empIdx: 17, courseId: 3, status: "final", priority: null, role: "Head", overrideReason: "Reclassificação de talent class em curso" },
   ];
   const stages = ["nominated", "country_hrd_validation", "zone_validation", "final"];
   const stageLabels = { nominated: "PDL Country", country_hrd_validation: "Country HRD", zone_validation: "Zone HRDs + PDL" };
@@ -173,7 +178,15 @@ const generateMockNominations = () => {
     const course = COURSES.find(c => c.id === def.courseId);
     const elig = checkEligibility(emp, course);
     const baseDate = new Date(2026, 0, 10 + i * 2);
-    const history = [{ action: "created", userId: "dione@loreal.com", userName: "Dione", timestamp: baseDate.toISOString(), details: `Nomeado para ${course.name}` }];
+    const outOfTarget = !elig.eligible;
+    const overrideReason = outOfTarget ? (def.overrideReason || "Mudança de cargo mapeada, ainda não refletida no sistema") : null;
+    const history = [{
+      action: "created",
+      userId: "dione@loreal.com",
+      userName: "Dione",
+      timestamp: baseDate.toISOString(),
+      details: outOfTarget ? `Nomeado (Exceção — Fora do Target) para ${course.name}: ${overrideReason}` : `Nomeado para ${course.name}`,
+    }];
 
     const stageIdx = stages.indexOf(def.status);
     if (def.status === "rejected") {
@@ -204,12 +217,12 @@ const generateMockNominations = () => {
       courseName: course.name,
       investment: course.investment,
       eligible: elig.eligible,
-      outOfTarget: !elig.eligible,
-      overrideReason: !elig.eligible ? "Mudança de cargo mapeada, ainda não refletida no sistema" : null,
+      outOfTarget,
+      overrideReason,
       score: calcScore(emp),
       status: def.status,
       date: baseDate.toISOString().slice(0, 10),
-      justification: "Potencial identificado pela liderança para desenvolvimento acelerado",
+      justification: outOfTarget ? "Exceção mapeada pela liderança — perfil crítico para o desenvolvimento da zona" : "Potencial identificado pela liderança para desenvolvimento acelerado",
       nominatorRole: def.role,
       priority: def.priority,
       rejectionReason: def.status === "rejected" ? "Restrição orçamentária para o ciclo atual" : "",
@@ -447,21 +460,21 @@ const DashboardPage = ({ nominations, onNavigate }) => {
   const totalInvestment = nominations.reduce((s, n) => s + n.investment, 0);
   const approvedCount = nominations.filter(n => n.status === "final").length;
   const pendingCount = nominations.filter(n => !["final", "rejected"].includes(n.status)).length;
-  const activeNoms = nominations.filter(n => n.status !== "rejected");
-
-  const keyPlayers = EMPLOYEES.filter(e => e.keyPlayer);
-  const keyPlayerIds = new Set(keyPlayers.map(e => e.id));
-  const keyPlayerNoms = activeNoms.filter(n => keyPlayerIds.has(n.employeeId));
-  const keyPlayersWithNom = new Set(keyPlayerNoms.map(n => n.employeeId));
-  const kpCoverage = keyPlayers.length > 0 ? Math.round((keyPlayersWithNom.size / keyPlayers.length) * 100) : 0;
-
   const byCountry = {};
+  const byCountryInv = {};
   nominations.forEach(n => {
     const emp = EMPLOYEES.find(e => e.id === n.employeeId);
-    if (emp) { byCountry[emp.country] = (byCountry[emp.country] || 0) + 1; }
+    if (emp) {
+      byCountry[emp.country] = (byCountry[emp.country] || 0) + 1;
+      byCountryInv[emp.country] = (byCountryInv[emp.country] || 0) + n.investment;
+    }
   });
   const byCourse = {};
-  nominations.forEach(n => { byCourse[n.courseName] = (byCourse[n.courseName] || 0) + 1; });
+  const byCourseInv = {};
+  nominations.forEach(n => {
+    byCourse[n.courseName] = (byCourse[n.courseName] || 0) + 1;
+    byCourseInv[n.courseName] = (byCourseInv[n.courseName] || 0) + n.investment;
+  });
   const byTalent = {};
   nominations.forEach(n => {
     const emp = EMPLOYEES.find(e => e.id === n.employeeId);
@@ -506,11 +519,10 @@ const DashboardPage = ({ nominations, onNavigate }) => {
         </button>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 28 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 28 }}>
         <StatCard icon="📊" label="Nominations" value={nominations.length} sub={`${pendingCount} pending • ${nomDelta.direction === "up" ? "▲" : "▼"} ${nomDelta.pct}% vs ${PREVIOUS_YEAR_DATA.totals.nominations} ano anterior`} />
         <StatCard icon="💰" label="Investment" value={`$${(totalInvestment / 1000).toFixed(0)}K`} sub={`of $850K • ${invDelta.direction === "up" ? "▲" : "▼"} ${invDelta.pct}% vs $${(PREVIOUS_YEAR_DATA.totals.investment / 1000).toFixed(0)}K anterior`} />
         <StatCard icon="✅" label="Approved" value={approvedCount} sub={`${nominations.length ? Math.round((approvedCount / nominations.length) * 100) : 0}% rate`} />
-        <StatCard icon="🔑" label="KP Coverage" value={`${kpCoverage}%`} sub={`${keyPlayersWithNom.size} de ${keyPlayers.length} key players nomeados`} />
       </div>
 
       <Card style={{ marginBottom: 28, padding: 28 }}>
@@ -567,15 +579,24 @@ const DashboardPage = ({ nominations, onNavigate }) => {
           </div>
           {ZONES[0].countries.map(country => {
             const count = byCountry[country] || 0;
+            const inv = byCountryInv[country] || 0;
             const prev = PREVIOUS_YEAR_DATA.byCountry[country];
             const d = prev ? calcDelta(count, prev.nominations) : null;
+            const dInv = prev ? calcDelta(inv, prev.investment) : null;
             return (
-              <div key={country} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${colors.medGray}` }}>
+              <div key={country} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: `1px solid ${colors.medGray}` }}>
                 <span style={{ color: colors.silver, fontSize: 13 }}>{country}</span>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ color: colors.white, fontWeight: 700, fontSize: 13 }}>{count}</span>
-                  {d && <span style={{ fontSize: 10, color: d.direction === "up" ? colors.success : colors.danger }}>{d.direction === "up" ? "▲" : "▼"}{d.pct}%</span>}
-                  {prev && <span style={{ fontSize: 10, color: colors.lightGray }}>({prev.nominations})</span>}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ color: colors.white, fontWeight: 700, fontSize: 13 }}>{count} nom.</span>
+                    {d && <span style={{ fontSize: 10, color: d.direction === "up" ? colors.success : colors.danger }}>{d.direction === "up" ? "▲" : "▼"}{d.pct}%</span>}
+                    {prev && <span style={{ fontSize: 10, color: colors.lightGray }}>({prev.nominations})</span>}
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ color: colors.gold, fontWeight: 600, fontSize: 11 }}>${(inv / 1000).toFixed(0)}K</span>
+                    {dInv && <span style={{ fontSize: 10, color: dInv.direction === "up" ? colors.success : colors.danger }}>{dInv.direction === "up" ? "▲" : "▼"}{dInv.pct}%</span>}
+                    {prev && <span style={{ fontSize: 10, color: colors.lightGray }}>(${(prev.investment / 1000).toFixed(0)}K)</span>}
+                  </div>
                 </div>
               </div>
             );
@@ -590,13 +611,22 @@ const DashboardPage = ({ nominations, onNavigate }) => {
             const course = COURSES.find(c => c.name === name);
             const prev = course ? PREVIOUS_YEAR_DATA.byCourse[course.id] : null;
             const d = prev ? calcDelta(count, prev.nominations) : null;
+            const inv = byCourseInv[name] || 0;
+            const dInv = prev ? calcDelta(inv, prev.investment) : null;
             return (
-              <div key={name} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${colors.medGray}` }}>
-                <span style={{ color: colors.silver, fontSize: 12, maxWidth: 160, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{name}</span>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ color: colors.white, fontWeight: 700, fontSize: 13 }}>{count}</span>
-                  {d && <span style={{ fontSize: 10, color: d.direction === "up" ? colors.success : colors.danger }}>{d.direction === "up" ? "▲" : "▼"}{d.pct}%</span>}
-                  {prev && <span style={{ fontSize: 10, color: colors.lightGray }}>({prev.nominations})</span>}
+              <div key={name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: `1px solid ${colors.medGray}` }}>
+                <span style={{ color: colors.silver, fontSize: 12, maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{name}</span>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ color: colors.white, fontWeight: 700, fontSize: 13 }}>{count} nom.</span>
+                    {d && <span style={{ fontSize: 10, color: d.direction === "up" ? colors.success : colors.danger }}>{d.direction === "up" ? "▲" : "▼"}{d.pct}%</span>}
+                    {prev && <span style={{ fontSize: 10, color: colors.lightGray }}>({prev.nominations})</span>}
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ color: colors.gold, fontWeight: 600, fontSize: 11 }}>${(inv / 1000).toFixed(0)}K</span>
+                    {dInv && <span style={{ fontSize: 10, color: dInv.direction === "up" ? colors.success : colors.danger }}>{dInv.direction === "up" ? "▲" : "▼"}{dInv.pct}%</span>}
+                    {prev && <span style={{ fontSize: 10, color: colors.lightGray }}>(${(prev.investment / 1000).toFixed(0)}K)</span>}
+                  </div>
                 </div>
               </div>
             );
@@ -1229,7 +1259,16 @@ const NominationPage = ({ nominations, setNominations }) => {
             </div>
           </div>
         )}
-        {nom.outOfTarget && <Badge variant="warning" size="xs">Fora do Target</Badge>}
+        {nom.outOfTarget && (
+          <div style={{ marginTop: 10, padding: "8px 12px", background: `${colors.warning}11`, border: `1px solid ${colors.warning}44`, borderRadius: 6, display: "flex", alignItems: "center", gap: 10 }}>
+            <Badge variant="warning" size="xs">Fora do Target</Badge>
+            {nom.overrideReason && (
+              <span style={{ fontSize: 11, color: colors.warning, lineHeight: 1.4 }}>
+                <strong>Exceção:</strong> {nom.overrideReason}
+              </span>
+            )}
+          </div>
+        )}
         {nom.history && nom.history.length > 0 && (
           <NomHistory history={nom.history} />
         )}
