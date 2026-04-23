@@ -456,7 +456,7 @@ const exportToExcel = (nominations) => {
 };
 
 // ==================== PAGES ====================
-const DashboardPage = ({ nominations, onNavigate }) => {
+const GeneralAnalytics = ({ nominations }) => {
   const totalInvestment = nominations.reduce((s, n) => s + n.investment, 0);
   const approvedCount = nominations.filter(n => n.status === "final").length;
   const pendingCount = nominations.filter(n => !["final", "rejected"].includes(n.status)).length;
@@ -503,22 +503,7 @@ const DashboardPage = ({ nominations, onNavigate }) => {
   const invDelta = calcDelta(totalInvestment, PREVIOUS_YEAR_DATA.totals.investment);
 
   return (
-    <div>
-      <div style={{ marginBottom: 32, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <div>
-          <h2 style={{ fontSize: 24, fontWeight: 300, color: colors.white, margin: 0, fontFamily: "'Playfair Display', serif" }}>
-            Dashboard <span style={{ color: colors.gold }}>LATAM</span>
-          </h2>
-          <p style={{ color: colors.lightGray, fontSize: 13, marginTop: 4 }}>Seminar by Nomination — Consolidated zone overview</p>
-        </div>
-        <button
-          onClick={() => exportToExcel(nominations)}
-          style={{ padding: "10px 20px", background: `linear-gradient(135deg, ${colors.gold}, ${colors.goldLight})`, color: colors.black, border: "none", borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, letterSpacing: "0.02em" }}
-        >
-          Export Excel
-        </button>
-      </div>
-
+    <>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 28 }}>
         <StatCard icon="📊" label="Nominations" value={nominations.length} sub={`${pendingCount} pending • ${nomDelta.direction === "up" ? "▲" : "▼"} ${nomDelta.pct}% vs ${PREVIOUS_YEAR_DATA.totals.nominations} ano anterior`} />
         <StatCard icon="💰" label="Investment" value={`$${(totalInvestment / 1000).toFixed(0)}K`} sub={`of $850K • ${invDelta.direction === "up" ? "▲" : "▼"} ${invDelta.pct}% vs $${(PREVIOUS_YEAR_DATA.totals.investment / 1000).toFixed(0)}K anterior`} />
@@ -674,6 +659,28 @@ const DashboardPage = ({ nominations, onNavigate }) => {
           ))}
         </Card>
       </div>
+    </>
+  );
+};
+
+const DashboardPage = ({ nominations, onNavigate }) => {
+  return (
+    <div>
+      <div style={{ marginBottom: 32, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <div>
+          <h2 style={{ fontSize: 24, fontWeight: 300, color: colors.white, margin: 0, fontFamily: "'Playfair Display', serif" }}>
+            Dashboard <span style={{ color: colors.gold }}>LATAM</span>
+          </h2>
+          <p style={{ color: colors.lightGray, fontSize: 13, marginTop: 4 }}>Seminar by Nomination — Consolidated zone overview</p>
+        </div>
+        <button
+          onClick={() => exportToExcel(nominations)}
+          style={{ padding: "10px 20px", background: `linear-gradient(135deg, ${colors.gold}, ${colors.goldLight})`, color: colors.black, border: "none", borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, letterSpacing: "0.02em" }}
+        >
+          Export Excel
+        </button>
+      </div>
+      <GeneralAnalytics nominations={nominations} />
     </div>
   );
 };
@@ -909,17 +916,24 @@ const EmployeeDirectory = ({ nominations, onNominate }) => {
   const [search, setSearch] = useState("");
   const [filterTalent, setFilterTalent] = useState("All");
   const [filterCountry, setFilterCountry] = useState("All");
+  const [filterTarget, setFilterTarget] = useState("All");
   const [sortBy, setSortBy] = useState("name");
   const [selectedEmp, setSelectedEmp] = useState(null);
 
   const enriched = useMemo(() =>
-    EMPLOYEES.map(e => ({ ...e, score: calcScore(e) })).sort((a, b) => sortBy === "name" ? a.name.localeCompare(b.name) : a.name.localeCompare(b.name)),
+    EMPLOYEES.map(e => ({
+      ...e,
+      score: calcScore(e),
+      isTarget: COURSES.some(c => checkEligibility(e, c).eligible),
+    })).sort((a, b) => sortBy === "name" ? a.name.localeCompare(b.name) : a.name.localeCompare(b.name)),
     [sortBy]
   );
 
   const filtered = enriched.filter(e => {
     if (filterTalent !== "All" && e.talentClass !== filterTalent) return false;
     if (filterCountry !== "All" && e.country !== filterCountry) return false;
+    if (filterTarget === "Target" && !e.isTarget) return false;
+    if (filterTarget === "No Target" && e.isTarget) return false;
     if (search && !e.name.toLowerCase().includes(search.toLowerCase()) && !e.id.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
@@ -1047,6 +1061,12 @@ const EmployeeDirectory = ({ nominations, onNominate }) => {
           <option value="All">All Countries</option>
           {ZONES[0].countries.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
+        <select value={filterTarget} onChange={e => setFilterTarget(e.target.value)}
+          style={{ padding: "10px 14px", background: colors.medGray, border: "1px solid #444", borderRadius: 6, color: colors.silver, fontSize: 12, cursor: "pointer" }}>
+          <option value="All">Target + No Target</option>
+          <option value="Target">Target</option>
+          <option value="No Target">No Target</option>
+        </select>
         <select value={sortBy} onChange={e => setSortBy(e.target.value)}
           style={{ padding: "10px 14px", background: colors.medGray, border: "1px solid #444", borderRadius: 6, color: colors.silver, fontSize: 12, cursor: "pointer" }}>
           <option value="name">Sort by Name</option>
@@ -1054,12 +1074,12 @@ const EmployeeDirectory = ({ nominations, onNominate }) => {
       </div>
 
       <div style={{ display: "grid", gap: 6 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "50px 1fr 130px 100px 100px 80px", gap: 12, padding: "10px 16px", fontSize: 10, color: colors.lightGray, textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>
-          <span></span><span>Employee</span><span>Classification</span><span>Performance</span><span>Flight Risk</span><span>SBN Past</span>
+        <div style={{ display: "grid", gridTemplateColumns: "50px 1fr 130px 100px 100px 90px 80px", gap: 12, padding: "10px 16px", fontSize: 10, color: colors.lightGray, textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>
+          <span></span><span>Employee</span><span>Classification</span><span>Performance</span><span>Flight Risk</span><span>Target</span><span>SBN Past</span>
         </div>
         {filtered.map(emp => (
           <div key={emp.id} onClick={() => setSelectedEmp(emp)}
-            style={{ display: "grid", gridTemplateColumns: "50px 1fr 130px 100px 100px 80px", gap: 12, padding: "14px 16px", background: colors.darkGray, borderRadius: 8, alignItems: "center", cursor: "pointer", border: "1px solid transparent", transition: "all 0.2s" }}
+            style={{ display: "grid", gridTemplateColumns: "50px 1fr 130px 100px 100px 90px 80px", gap: 12, padding: "14px 16px", background: colors.darkGray, borderRadius: 8, alignItems: "center", cursor: "pointer", border: "1px solid transparent", transition: "all 0.2s" }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = colors.gold + "44"; e.currentTarget.style.background = colors.medGray; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = "transparent"; e.currentTarget.style.background = colors.darkGray; }}>
             <div style={{ width: 36, height: 36, borderRadius: "50%", background: `linear-gradient(135deg, ${colors.gold}44, ${colors.goldDark}44)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: colors.gold }}>
@@ -1072,6 +1092,7 @@ const EmployeeDirectory = ({ nominations, onNominate }) => {
             <Badge variant={talentColors[emp.talentClass]} size="xs">{emp.talentClass}</Badge>
             <Badge variant={perfColors[emp.performance]} size="xs">{emp.performance.split(" ")[0]}</Badge>
             <Badge variant={riskColors[emp.flightRisk]} size="xs">{emp.flightRisk}</Badge>
+            <Badge variant={emp.isTarget ? "success" : "warning"} size="xs">{emp.isTarget ? "Target" : "No Target"}</Badge>
             <div style={{ fontSize: 13, color: emp.pastSBNCount === 0 ? colors.success : colors.silver, fontWeight: 600, textAlign: "center" }}>
               {emp.pastSBNCount === 0 ? "New ✨" : `${emp.pastSBNCount}x`}
             </div>
@@ -1430,7 +1451,18 @@ const PDLLatamPage = ({ nominations }) => {
         <h2 style={{ fontSize: 24, fontWeight: 300, color: colors.white, margin: 0, fontFamily: "'Playfair Display', serif" }}>
           PDL <span style={{ color: colors.gold }}>LATAM</span>
         </h2>
-        <p style={{ color: colors.lightGray, fontSize: 13, marginTop: 4 }}>Key Player Analytics — Visão consolidada</p>
+        <p style={{ color: colors.lightGray, fontSize: 13, marginTop: 4 }}>Visão consolidada — Analytics + Key Players</p>
+      </div>
+
+      <GeneralAnalytics nominations={nominations} />
+
+      <div style={{ height: 32 }} />
+
+      <div style={{ marginBottom: 20 }}>
+        <h3 style={{ fontSize: 18, fontWeight: 400, color: colors.white, margin: 0, fontFamily: "'Playfair Display', serif" }}>
+          Key <span style={{ color: colors.gold }}>Players</span>
+        </h3>
+        <p style={{ color: colors.lightGray, fontSize: 12, marginTop: 4 }}>Talentos estratégicos — exclusivo PDL LATAM</p>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 28 }}>
