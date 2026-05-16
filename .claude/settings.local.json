@@ -6,7 +6,16 @@
       "Bash(cd \"C:\\\\Users\\\\rodri\\\\OneDrive - Nerpa\\\\JS\\\\SBN\" && mv fix-unicode.js fix-unicode.cjs && node fix-unicode.cjs)",
       "Bash(cd \"C:\\\\Users\\\\rodri\\\\OneDrive - Nerpa\\\\JS\\\\SBN\" && npx vite build 2>&1 | head -15)",
       "Bash(cd \"C:\\\\Users\\\\rodri\\\\OneDrive - Nerpa\\\\JS\\\\SBN\" && npx vite --port 5173 2>&1)",
-      "Bash(xxd \"C:/Users/rodri/OneDrive - Nerpa/JS/SBN/sbn-nomination-app.jsx\" | head -5)"
+      "Bash(xxd \"C:/Users/rodri/OneDrive - Nerpa/JS/SBN/sbn-nomination-app.jsx\" | head -5)",
+      "Bash(npx vite:*)",
+      "Bash(curl -s http://localhost:5173/)",
+      "Bash(gh api:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(npm view *)",
+      "Bash(curl -sI https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz)",
+      "Bash(npm audit *)",
+      "Bash(npm ls *)"
     ]
   }
 }
