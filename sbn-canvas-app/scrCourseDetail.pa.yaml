@@ -1,0 +1,1239 @@
+Screens:
+  scrCourseDetail:
+    Properties:
+      Fill: =varTheme.black
+      # touch
+      OnVisible: |-
+        =Set(varCurrentPage, "catalog");
+        UpdateContext({
+          locSearch: "",
+          locShowOOT: false,
+          locFormEmp: If(false, First(colEmployees)),
+          locFormException: false,
+          locJustification: "",
+          locOverrideReason: ""
+        })
+    Children:
+      - cdtGrpRoot:
+          Control: GroupContainer
+          Variant: ManualLayout
+          Properties:
+            Height: =Parent.Height
+            Width: =Parent.Width
+          Children:
+            - cdtGrpSidebar:
+                Control: GroupContainer
+                Variant: ManualLayout
+                Properties:
+                  Height: =Parent.Height
+                  Width: =240
+                Children:
+                  - cdtSidebarBg:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =varTheme.lightGray
+                        Fill: =varTheme.darkGray
+                        Height: =Parent.Height
+                        Width: =240
+                  - cdtSidebarRightBorder:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.medGray
+                        Height: =Parent.Height
+                        Width: =1
+                        X: =239
+                  - cdtSidebarWordmark:
+                      Control: Label
+                      Properties:
+                        Color: =varTheme.white
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.serif
+                        FontWeight: =FontWeight.Bold
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =22
+                        Height: =32
+                        Text: ="L'ORÉAL"
+                        Width: =200
+                        Wrap: =false
+                        X: =24
+                        Y: =28
+                  - cdtSidebarSubtitle:
+                      Control: Label
+                      Properties:
+                        Color: =varTheme.gold
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontWeight: =FontWeight.Semibold
+                        Height: =16
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =9
+                        Text: ="SEMINAR BY NOMINATION"
+                        Width: =200
+                        Wrap: =false
+                        X: =24
+                        Y: =70
+                  - cdtNavDashboardBorder:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "dashboard"
+                        Width: =3
+                        Y: =128
+                  - cdtNavDashboardBg:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =If(varCurrentPage = "dashboard", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =128
+                  - cdtNavDashboardLabel:
+                      Control: Label
+                      Properties:
+                        Color: =If(varCurrentPage = "dashboard", varTheme.white, varTheme.silver)
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontWeight: =If(varCurrentPage = "dashboard", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Dashboard"
+                        Width: =200
+                        Wrap: =false
+                        X: =24
+                        Y: =128
+                  - cdtNavDashboardBtn:
+                      Control: Button
+                      Properties:
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        Height: =44
+                        OnSelect: =Set(varCurrentPage, "dashboard"); Navigate(scrDashboard, ScreenTransition.Fade)
+                        Text: =""
+                        Width: =240
+                        Y: =128
+                  - cdtNavCoursesBorder:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "catalog"
+                        Width: =3
+                        Y: =172
+                  - cdtNavCoursesBg:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =If(varCurrentPage = "catalog", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =172
+                  - cdtNavCoursesLabel:
+                      Control: Label
+                      Properties:
+                        Color: =If(varCurrentPage = "catalog", varTheme.white, varTheme.silver)
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontWeight: =If(varCurrentPage = "catalog", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Courses"
+                        Width: =200
+                        Wrap: =false
+                        X: =24
+                        Y: =172
+                  - cdtNavCoursesBtn:
+                      Control: Button
+                      Properties:
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        Height: =44
+                        OnSelect: =Set(varCurrentPage, "catalog"); Navigate(scrCatalog, ScreenTransition.Fade)
+                        Text: =""
+                        Width: =240
+                        Y: =172
+                  - cdtNavEmployeesBorder:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "employees"
+                        Width: =3
+                        Y: =216
+                  - cdtNavEmployeesBg:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =If(varCurrentPage = "employees", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =216
+                  - cdtNavEmployeesLabel:
+                      Control: Label
+                      Properties:
+                        Color: =If(varCurrentPage = "employees", varTheme.white, varTheme.silver)
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontWeight: =If(varCurrentPage = "employees", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Employees"
+                        Width: =200
+                        Wrap: =false
+                        X: =24
+                        Y: =216
+                  - cdtNavEmployeesBtn:
+                      Control: Button
+                      Properties:
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        Height: =44
+                        OnSelect: =Set(varCurrentPage, "employees"); Navigate(scrEmployees, ScreenTransition.Fade)
+                        Text: =""
+                        Width: =240
+                        Y: =216
+                  - cdtNavNominationsBorder:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "nominations"
+                        Width: =3
+                        Y: =260
+                  - cdtNavNominationsBg:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =If(varCurrentPage = "nominations", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =260
+                  - cdtNavNominationsLabel:
+                      Control: Label
+                      Properties:
+                        Color: =If(varCurrentPage = "nominations", varTheme.white, varTheme.silver)
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontWeight: =If(varCurrentPage = "nominations", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Nominations"
+                        Width: =200
+                        Wrap: =false
+                        X: =24
+                        Y: =260
+                  - cdtNavNominationsBtn:
+                      Control: Button
+                      Properties:
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        Height: =44
+                        OnSelect: =Set(varCurrentPage, "nominations"); Navigate(scrNominations, ScreenTransition.Fade)
+                        Text: =""
+                        Width: =240
+                        Y: =260
+                  - cdtNavSeatsBorder:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "seats"
+                        Width: =3
+                        Y: =304
+                  - cdtNavSeatsBg:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =If(varCurrentPage = "seats", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =304
+                  - cdtNavSeatsLabel:
+                      Control: Label
+                      Properties:
+                        Color: =If(varCurrentPage = "seats", varTheme.white, varTheme.silver)
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontWeight: =If(varCurrentPage = "seats", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Seats"
+                        Width: =200
+                        Wrap: =false
+                        X: =24
+                        Y: =304
+                  - cdtNavSeatsBtn:
+                      Control: Button
+                      Properties:
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        Height: =44
+                        OnSelect: =Set(varCurrentPage, "seats"); Navigate(scrSeats, ScreenTransition.Fade)
+                        Text: =""
+                        Width: =240
+                        Y: =304
+                  - cdtNavPdlBorder:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "pdl"
+                        Width: =3
+                        Y: =348
+                  - cdtNavPdlBg:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =If(varCurrentPage = "pdl", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =348
+                  - cdtNavPdlLabel:
+                      Control: Label
+                      Properties:
+                        Color: =If(varCurrentPage = "pdl", varTheme.white, varTheme.silver)
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontWeight: =If(varCurrentPage = "pdl", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="PDL LATAM"
+                        Width: =200
+                        Wrap: =false
+                        X: =24
+                        Y: =348
+                  - cdtNavPdlBtn:
+                      Control: Button
+                      Properties:
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        Height: =44
+                        OnSelect: =Set(varCurrentPage, "pdl"); Navigate(scrPDLLatam, ScreenTransition.Fade)
+                        Text: =""
+                        Width: =240
+                        Y: =348
+                  - cdtNavCriteriaBorder:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "criteria"
+                        Width: =3
+                        Y: =392
+                  - cdtNavCriteriaBg:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =If(varCurrentPage = "criteria", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =392
+                  - cdtNavCriteriaLabel:
+                      Control: Label
+                      Properties:
+                        Color: =If(varCurrentPage = "criteria", varTheme.white, varTheme.silver)
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontWeight: =If(varCurrentPage = "criteria", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Criteria"
+                        Width: =200
+                        Wrap: =false
+                        X: =24
+                        Y: =392
+                  - cdtNavCriteriaBtn:
+                      Control: Button
+                      Properties:
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        Height: =44
+                        OnSelect: =Set(varCurrentPage, "criteria"); Navigate(scrCriteria, ScreenTransition.Fade)
+                        Text: =""
+                        Width: =240
+                        Y: =392
+                  - cdtSidebarFooterDivider:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.medGray
+                        Height: =1
+                        Width: =192
+                        X: =24
+                        Y: =Parent.Height - 110
+                  - cdtSidebarFooterName:
+                      Control: Label
+                      Properties:
+                        Color: =varTheme.offWhite
+                        Font: =varTheme.sans
+                        FontWeight: =FontWeight.Semibold
+                        Height: =20
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Text: =varCurrentUser.name
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =Parent.Height - 96
+                  - cdtSidebarFooterRole:
+                      Control: Label
+                      Properties:
+                        Color: =varTheme.lightGray
+                        Font: =varTheme.sans
+                        Height: =16
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: =varCurrentUser.role
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =Parent.Height - 74
+                  - cdtSidebarFooterEmail:
+                      Control: Label
+                      Properties:
+                        Color: =varTheme.lightGray
+                        Font: =varTheme.sans
+                        Height: =16
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: =varCurrentUser.email
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =Parent.Height - 56
+            - cdtGrpContent:
+                Control: GroupContainer
+                Variant: AutoLayout
+                Properties:
+                  Height: =Parent.Height
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Vertical
+                  LayoutGap: =24
+                  LayoutOverflowY: =LayoutOverflow.Scroll
+                  PaddingBottom: =32
+                  PaddingLeft: =32
+                  PaddingRight: =32
+                  PaddingTop: =32
+                  Width: =Parent.Width - 240
+                  X: =240
+                Children:
+                  - grpBackRow:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        FillPortions: =0
+                        Height: =40
+                        LayoutAlignItems: =LayoutAlignItems.Center
+                        LayoutDirection: =LayoutDirection.Horizontal
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                      Children:
+                        - btnBack:
+                            Control: Button
+                            Properties:
+                              AlignInContainer: =AlignInContainer.Center
+                              Appearance: ='ButtonCanvas.Appearance'.Transparent
+                              BasePaletteColor: =varTheme.gold
+                              Height: =40
+                              OnSelect: =Navigate(scrCatalog, ScreenTransition.Fade)
+                              Text: ="< Back to Catalog"
+                              Width: =200
+                  - cardCourseHeader:
+                      Control: GroupContainer
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =varTheme.lightGray
+                        BorderThickness: =1
+                        Fill: =varTheme.darkGray
+                        FillPortions: =0
+                        Height: =320
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                      Children:
+                        - grpCourseHeaderInner:
+                            Control: GroupContainer
+                            Variant: AutoLayout
+                            Properties:
+                              Height: =Parent.Height
+                              LayoutDirection: =LayoutDirection.Horizontal
+                              LayoutGap: =24
+                              PaddingBottom: =24
+                              PaddingLeft: =24
+                              PaddingRight: =24
+                              PaddingTop: =24
+                              Width: =Parent.Width
+                            Children:
+                              - grpCourseHeaderLeft:
+                                  Control: GroupContainer
+                                  Variant: AutoLayout
+                                  Properties:
+                                    LayoutAlignItems: =LayoutAlignItems.Stretch
+                                    LayoutDirection: =LayoutDirection.Vertical
+                                    LayoutGap: =12
+                                    LayoutMinHeight: =0
+                                    LayoutMinWidth: =0
+                                  Children:
+                                    - lblCourseCode:
+                                        Control: Label
+                                        Properties:
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          Color: =varTheme.gold
+                                          Font: =varTheme.sans
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =18
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =12
+                                          Text: =Upper(Coalesce(varSelectedCourse.Code, ""))
+                                          Wrap: =false
+                                    - lblCourseName:
+                                        Control: Label
+                                        Properties:
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          AutoHeight: =true
+                                          Color: =varTheme.white
+                                          Font: =varTheme.serif
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =44
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =28
+                                          Text: =Coalesce(varSelectedCourse.CourseName, "")
+                                          Wrap: =false
+                                    - lblCourseDescription:
+                                        Control: Label
+                                        Properties:
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          AutoHeight: =true
+                                          Color: =varTheme.silver
+                                          Font: =varTheme.sans
+                                          Height: =54
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Text: =Coalesce(varSelectedCourse.Description, "")
+                                    - lblCourseObjective:
+                                        Control: Label
+                                        Properties:
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          AutoHeight: =true
+                                          Color: =varTheme.offWhite
+                                          Font: =varTheme.sans
+                                          Height: =54
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Text: =Coalesce(varSelectedCourse.Objective, "")
+                                    - grpMetaStrip:
+                                        Control: GroupContainer
+                                        Variant: AutoLayout
+                                        Properties:
+                                          FillPortions: =0
+                                          Height: =36
+                                          LayoutAlignItems: =LayoutAlignItems.Center
+                                          LayoutDirection: =LayoutDirection.Horizontal
+                                          LayoutGap: =16
+                                          LayoutMinHeight: =0
+                                          LayoutMinWidth: =0
+                                        Children:
+                                          - lblMetaSeats:
+                                              Control: Label
+                                              Properties:
+                                                AlignInContainer: =AlignInContainer.Center
+                                                Color: =varTheme.offWhite
+                                                Font: =varTheme.sans
+                                                FontWeight: =FontWeight.Semibold
+                                                Height: =20
+                                                PaddingBottom: =0
+                                                PaddingLeft: =0
+                                                PaddingRight: =0
+                                                PaddingTop: =0
+                                                Size: =11
+                                                Text: |-
+                                                  ="Seats: " & CountIf(colNominations, CourseID = Value(varSelectedCourse.CourseID) && Status <> "rejected") & " / " & Coalesce(varSelectedCourse.Seats, 0)
+                                                Width: =160
+                                                Wrap: =false
+                                          - lblMetaEligible:
+                                              Control: Label
+                                              Properties:
+                                                AlignInContainer: =AlignInContainer.Center
+                                                Color: =varTheme.offWhite
+                                                Font: =varTheme.sans
+                                                FontWeight: =FontWeight.Semibold
+                                                Height: =20
+                                                PaddingBottom: =0
+                                                PaddingLeft: =0
+                                                PaddingRight: =0
+                                                PaddingTop: =0
+                                                Size: =11
+                                                Text: |-
+                                                  ="Eligible: " & CountIf(colEmployees, ((varSelectedCourse.MinMonthsCompany <= 0 || ThisRecord.MonthsCompany >= varSelectedCourse.MinMonthsCompany) && (varSelectedCourse.MinMonthsDivision <= 0 || ThisRecord.MonthsDivision >= varSelectedCourse.MinMonthsDivision) && (varSelectedCourse.MaxAge <= 0 || ThisRecord.Age <= varSelectedCourse.MaxAge) && (IsBlank(varSelectedCourse.RequiredCourseCode) || varSelectedCourse.RequiredCourseCode = "" || varSelectedCourse.RequiredCourseCode in Split(Coalesce(ThisRecord.CompletedCourses, ""), ",")) && ((varSelectedCourse.DivisionRangeMin <= 0 && varSelectedCourse.DivisionRangeMax <= 0) || (ThisRecord.MonthsDivision >= varSelectedCourse.DivisionRangeMin && ThisRecord.MonthsDivision <= varSelectedCourse.DivisionRangeMax))))
+                                                Width: =160
+                                                Wrap: =false
+                                          - rectStatusBadge:
+                                              Control: Rectangle
+                                              Properties:
+                                                AlignInContainer: =AlignInContainer.Center
+                                                BorderColor: =If(varSelectedCourse.Status = "Active", varTheme.success, varTheme.danger)
+                                                Fill: =If(varSelectedCourse.Status = "Active", varTheme.successSoft, varTheme.dangerSoft)
+                                                Height: =24
+                                                Width: =80
+                              - grpCourseHeaderRight:
+                                  Control: GroupContainer
+                                  Variant: AutoLayout
+                                  Properties:
+                                    FillPortions: =0
+                                    Height: =272
+                                    LayoutAlignItems: =LayoutAlignItems.End
+                                    LayoutDirection: =LayoutDirection.Vertical
+                                    LayoutGap: =8
+                                    LayoutMinHeight: =0
+                                    LayoutMinWidth: =0
+                                    Width: =280
+                                  Children:
+                                    - lblInvestmentLabel:
+                                        Control: Label
+                                        Properties:
+                                          Align: =Align.Right
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          Color: =varTheme.silver
+                                          Font: =varTheme.sans
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =18
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =11
+                                          Text: ="INVESTMENT"
+                                          Wrap: =false
+                                    - lblInvestmentValue:
+                                        Control: Label
+                                        Properties:
+                                          Align: =Align.Right
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          Color: =varTheme.gold
+                                          Font: =varTheme.serif
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =42
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =28
+                                          Text: =Text(Coalesce(varSelectedCourse.Investment, 0), "[$-en-US]$#,##0")
+                                          Wrap: =false
+                                    - lblProvider:
+                                        Control: Label
+                                        Properties:
+                                          Align: =Align.Right
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          Color: =varTheme.lightGray
+                                          Font: =varTheme.sans
+                                          Height: =20
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =11
+                                          Text: |-
+                                            ="Provider: " & Coalesce(varSelectedCourse.Provider, "")
+                                          Wrap: =false
+                                    - lblDuration:
+                                        Control: Label
+                                        Properties:
+                                          Align: =Align.Right
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          Color: =varTheme.lightGray
+                                          Font: =varTheme.sans
+                                          Height: =20
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =11
+                                          Text: |-
+                                            ="Duration: " & Coalesce(varSelectedCourse.Duration, "")
+                                          Wrap: =false
+                                    - lblFormat:
+                                        Control: Label
+                                        Properties:
+                                          Align: =Align.Right
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          Color: =varTheme.lightGray
+                                          Font: =varTheme.sans
+                                          Height: =20
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =11
+                                          Text: |-
+                                            ="Format: " & Coalesce(varSelectedCourse.Format, "")
+                                          Wrap: =false
+                  - grpFilterRow:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        FillPortions: =0
+                        Height: =56
+                        LayoutAlignItems: =LayoutAlignItems.Center
+                        LayoutDirection: =LayoutDirection.Horizontal
+                        LayoutGap: =16
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                      Children:
+                        - txtSearchEmployees:
+                            Control: ModernTextInput
+                            Properties:
+                              AlignInContainer: =AlignInContainer.Center
+                              BorderColor: =varTheme.lightGray
+                              Color: =varTheme.offWhite
+                              Fill: =varTheme.darkGray
+                              FillPortions: =1
+                              Height: =44
+                              OnChange: |-
+                                =UpdateContext({
+                                  locSearch: Self.Text
+                                })
+                              Placeholder: ="Search employees by name or job title..."
+                        - tglShowOOT:
+                            Control: Toggle
+                            Properties:
+                              AlignInContainer: =AlignInContainer.Center
+                              Height: =44
+                              Label: ="Show non-eligible"
+                              OnSelect: |-
+                                =UpdateContext({
+                                  locShowOOT: Self.Checked
+                                })
+                              Width: =220
+                  - lblEligibleSectionTitle:
+                      Control: Label
+                      Properties:
+                        AlignInContainer: =AlignInContainer.Stretch
+                        Color: =varTheme.white
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.serif
+                        FontWeight: =FontWeight.Semibold
+                        Height: =28
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =20
+                        Text: ="Eligible Employees"
+                        Wrap: =false
+                  - galEligible:
+                      Control: Gallery
+                      Variant: Vertical
+                      Properties:
+                        FillPortions: =0
+                        Height: =CountRows(Self.AllItems) * 72
+                        Items: |-
+                          =Filter(
+                            colEmployees,
+                            ((varSelectedCourse.MinMonthsCompany <= 0 || ThisRecord.MonthsCompany >= varSelectedCourse.MinMonthsCompany) && (varSelectedCourse.MinMonthsDivision <= 0 || ThisRecord.MonthsDivision >= varSelectedCourse.MinMonthsDivision) && (varSelectedCourse.MaxAge <= 0 || ThisRecord.Age <= varSelectedCourse.MaxAge) && (IsBlank(varSelectedCourse.RequiredCourseCode) || varSelectedCourse.RequiredCourseCode = "" || varSelectedCourse.RequiredCourseCode in Split(Coalesce(ThisRecord.CompletedCourses, ""), ",")) && ((varSelectedCourse.DivisionRangeMin <= 0 && varSelectedCourse.DivisionRangeMax <= 0) || (ThisRecord.MonthsDivision >= varSelectedCourse.DivisionRangeMin && ThisRecord.MonthsDivision <= varSelectedCourse.DivisionRangeMax)))
+                            && (locSearch = ""
+                                || locSearch in FullName
+                                || locSearch in JobTitle)
+                          )
+                        ShowScrollbar: =false
+                        TemplatePadding: =0
+                        TemplateSize: =72
+                      Children:
+                        - rowEligibleBg:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.lightGray
+                              BorderThickness: =1
+                              Fill: =varTheme.darkGray
+                              Height: =Parent.TemplateHeight - 8
+                              Width: =Parent.TemplateWidth
+                        - avEligible:
+                            Control: Avatar
+                            Properties:
+                              Height: =32
+                              Name: =ThisItem.FullName
+                              Width: =32
+                              X: =16
+                              Y: =16
+                        - lblEligibleName:
+                            Control: Label
+                            Properties:
+                              Color: =varTheme.offWhite
+                              Font: =varTheme.sans
+                              FontWeight: =FontWeight.Semibold
+                              Height: =22
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =14
+                              Text: =ThisItem.FullName
+                              Width: =320
+                              Wrap: =false
+                              X: =60
+                              Y: =12
+                        - lblEligibleMeta:
+                            Control: Label
+                            Properties:
+                              Color: =varTheme.lightGray
+                              Font: =varTheme.sans
+                              Height: =18
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =11
+                              Text: =ThisItem.JobTitle & " · " & ThisItem.Country
+                              Width: =320
+                              Wrap: =false
+                              X: =60
+                              Y: =34
+                        - rectTalentBadge:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.gold
+                              BorderThickness: =1
+                              Fill: =varTheme.goldSoft
+                              Height: =26
+                              Width: =140
+                              X: =400
+                              Y: =20
+                        - lblTalentBadge:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Center
+                              Color: =varTheme.gold
+                              Font: =varTheme.sans
+                              FontWeight: =FontWeight.Semibold
+                              Height: =26
+                              PaddingBottom: =0
+                              PaddingLeft: =8
+                              PaddingRight: =8
+                              PaddingTop: =0
+                              Size: =11
+                              Text: =ThisItem.TalentClass
+                              Width: =140
+                              Wrap: =false
+                              X: =400
+                              Y: =20
+                        - btnNominateEligible:
+                            Control: Button
+                            Properties:
+                              BasePaletteColor: =varTheme.gold
+                              OnSelect: |-
+                                =Set(varSelectedEmp, ThisItem);
+                                UpdateContext({
+                                  locFormEmp: ThisItem,
+                                  locFormException: false,
+                                  locJustification: "",
+                                  locOverrideReason: ""
+                                });
+                                Set(varShowNominationForm, true)
+                              Text: ="Nominate"
+                              Width: =140
+                              X: =Parent.TemplateWidth - 156
+                              Y: =20
+                  - lblOOTSectionTitle:
+                      Control: Label
+                      Properties:
+                        AlignInContainer: =AlignInContainer.Stretch
+                        Color: =varTheme.white
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.serif
+                        FontWeight: =FontWeight.Semibold
+                        Height: =28
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =20
+                        Text: ="Out of Target Employees"
+                        Visible: =locShowOOT
+                        Wrap: =false
+                  - galOOT:
+                      Control: Gallery
+                      Variant: Vertical
+                      Properties:
+                        FillPortions: =0
+                        Height: =CountRows(Self.AllItems) * 108
+                        Items: |-
+                          =Filter(
+                            colEmployees,
+                            !((varSelectedCourse.MinMonthsCompany <= 0 || ThisRecord.MonthsCompany >= varSelectedCourse.MinMonthsCompany) && (varSelectedCourse.MinMonthsDivision <= 0 || ThisRecord.MonthsDivision >= varSelectedCourse.MinMonthsDivision) && (varSelectedCourse.MaxAge <= 0 || ThisRecord.Age <= varSelectedCourse.MaxAge) && (IsBlank(varSelectedCourse.RequiredCourseCode) || varSelectedCourse.RequiredCourseCode = "" || varSelectedCourse.RequiredCourseCode in Split(Coalesce(ThisRecord.CompletedCourses, ""), ",")) && ((varSelectedCourse.DivisionRangeMin <= 0 && varSelectedCourse.DivisionRangeMax <= 0) || (ThisRecord.MonthsDivision >= varSelectedCourse.DivisionRangeMin && ThisRecord.MonthsDivision <= varSelectedCourse.DivisionRangeMax)))
+                            && (locSearch = ""
+                                || locSearch in FullName
+                                || locSearch in JobTitle)
+                          )
+                        ShowScrollbar: =false
+                        TemplatePadding: =0
+                        TemplateSize: =108
+                        Visible: =locShowOOT
+                      Children:
+                        - rowOOTBg:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.warning
+                              BorderThickness: =1
+                              Fill: =varTheme.darkGray
+                              Height: =Parent.TemplateHeight - 8
+                              Width: =Parent.TemplateWidth
+                        - avOOT:
+                            Control: Avatar
+                            Properties:
+                              Height: =32
+                              Name: =ThisItem.FullName
+                              Width: =32
+                              X: =16
+                              Y: =16
+                        - lblOOTName:
+                            Control: Label
+                            Properties:
+                              Color: =varTheme.offWhite
+                              Font: =varTheme.sans
+                              FontWeight: =FontWeight.Semibold
+                              Height: =22
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =14
+                              Text: =ThisItem.FullName
+                              Width: =320
+                              Wrap: =false
+                              X: =60
+                              Y: =12
+                        - lblOOTMeta:
+                            Control: Label
+                            Properties:
+                              Color: =varTheme.lightGray
+                              Font: =varTheme.sans
+                              Height: =18
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =11
+                              Text: =ThisItem.JobTitle & " · " & ThisItem.Country
+                              Width: =320
+                              Wrap: =false
+                              X: =60
+                              Y: =34
+                        - lblOOTReasons:
+                            Control: Label
+                            Properties:
+                              AutoHeight: =true
+                              Color: =varTheme.danger
+                              Font: =varTheme.sans
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =11
+                              Text: |-
+                                =Concat(Filter(Table({reason: If(varSelectedCourse.MinMonthsCompany > 0 && ThisItem.MonthsCompany < varSelectedCourse.MinMonthsCompany, "Min " & varSelectedCourse.MinMonthsCompany & " months at company", "")}, {reason: If(varSelectedCourse.MinMonthsDivision > 0 && ThisItem.MonthsDivision < varSelectedCourse.MinMonthsDivision, "Min " & varSelectedCourse.MinMonthsDivision & " months in division", "")}, {reason: If(varSelectedCourse.MaxAge > 0 && ThisItem.Age > varSelectedCourse.MaxAge, "Max age " & varSelectedCourse.MaxAge, "")}, {reason: If(!IsBlank(varSelectedCourse.RequiredCourseCode) && varSelectedCourse.RequiredCourseCode <> "" && !(varSelectedCourse.RequiredCourseCode in Split(Coalesce(ThisItem.CompletedCourses, ""), ",")), "Prereq: " & varSelectedCourse.RequiredCourseCode, "")}), reason <> ""), reason, "; ")
+                              Width: =520
+                              X: =60
+                              Y: =56
+                        - rectOOTBadge:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.warning
+                              BorderThickness: =1
+                              Fill: =varTheme.warningSoft
+                              Height: =26
+                              Width: =140
+                              X: =400
+                              Y: =20
+                        - lblOOTBadge:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Center
+                              Color: =varTheme.warning
+                              Font: =varTheme.sans
+                              FontWeight: =FontWeight.Semibold
+                              Height: =26
+                              PaddingBottom: =0
+                              PaddingLeft: =8
+                              PaddingRight: =8
+                              PaddingTop: =0
+                              Size: =11
+                              Text: ="Out of Target"
+                              Width: =140
+                              Wrap: =false
+                              X: =400
+                              Y: =20
+                        - btnNominateOOT:
+                            Control: Button
+                            Properties:
+                              BasePaletteColor: =varTheme.warning
+                              OnSelect: |-
+                                =Set(varSelectedEmp, ThisItem);
+                                UpdateContext({
+                                  locFormEmp: ThisItem,
+                                  locFormException: true,
+                                  locJustification: "",
+                                  locOverrideReason: ""
+                                });
+                                Set(varShowNominationForm, true)
+                              Text: ="Nominate (Exception)"
+                              Width: =180
+                              X: =Parent.TemplateWidth - 196
+                              Y: =20
+      - grpFormBackdrop:
+          Control: GroupContainer
+          Variant: ManualLayout
+          Properties:
+            Height: =Parent.Height
+            Visible: =varShowNominationForm
+            Width: =Parent.Width
+          Children:
+            - rectBackdrop:
+                Control: Rectangle
+                Properties:
+                  Fill: =RGBA(0, 0, 0, 0.6)
+                  Height: =Parent.Height
+                  Width: =Parent.Width
+            - btnBackdropClose:
+                Control: Button
+                Properties:
+                  Appearance: ='ButtonCanvas.Appearance'.Transparent
+                  Height: =Parent.Height
+                  OnSelect: =Set(varShowNominationForm, false)
+                  Text: =""
+                  Width: =Parent.Width
+            - cardForm:
+                Control: GroupContainer
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =varTheme.gold
+                  BorderThickness: =1
+                  Fill: =varTheme.darkGray
+                  Height: =520
+                  RadiusBottomLeft: =8
+                  RadiusBottomRight: =8
+                  RadiusTopLeft: =8
+                  RadiusTopRight: =8
+                  Width: =480
+                  X: =(Parent.Width - 480) / 2
+                  Y: =(Parent.Height - 520) / 2
+                Children:
+                  - grpFormInner:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        Height: =Parent.Height
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =12
+                        PaddingBottom: =24
+                        PaddingLeft: =24
+                        PaddingRight: =24
+                        PaddingTop: =24
+                        Width: =Parent.Width
+                      Children:
+                        - lblFormTitle:
+                            Control: Label
+                            Properties:
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =varTheme.white
+                              Font: =varTheme.serif
+                              FontWeight: =FontWeight.Bold
+                              Height: =28
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =18
+                              Text: |-
+                                ="Nominate: " & Coalesce(locFormEmp.FullName, "")
+                              Wrap: =false
+                        - lblFormSub:
+                            Control: Label
+                            Properties:
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =If(locFormException, varTheme.warning, varTheme.silver)
+                              Font: =varTheme.sans
+                              Height: =20
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =12
+                              Text: =Coalesce(varSelectedCourse.CourseName, "") & If(locFormException, " - OUT OF TARGET", "")
+                              Wrap: =false
+                        - lblJustificationLabel:
+                            Control: Label
+                            Properties:
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =varTheme.silver
+                              Font: =varTheme.sans
+                              FontWeight: =FontWeight.Semibold
+                              Height: =20
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =11
+                              Text: ="Justification *"
+                              Wrap: =false
+                        - txtJustification:
+                            Control: ModernTextInput
+                            Properties:
+                              AlignInContainer: =AlignInContainer.Stretch
+                              BorderColor: =varTheme.lightGray
+                              Color: =varTheme.offWhite
+                              Default: =locJustification
+                              Fill: =varTheme.black
+                              Height: =100
+                              OnChange: |-
+                                =UpdateContext({
+                                  locJustification: Self.Text
+                                })
+                              Placeholder: ="Why is this person being nominated?"
+                              Type: =TextInputType.Multiline
+                        - lblOverrideLabel:
+                            Control: Label
+                            Properties:
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =varTheme.warning
+                              Font: =varTheme.sans
+                              FontWeight: =FontWeight.Semibold
+                              Height: =20
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =11
+                              Text: ="Override Reason *"
+                              Visible: =locFormException
+                              Wrap: =false
+                        - txtOverrideReason:
+                            Control: ModernTextInput
+                            Properties:
+                              AlignInContainer: =AlignInContainer.Stretch
+                              BorderColor: =varTheme.warning
+                              Color: =varTheme.offWhite
+                              Default: =locOverrideReason
+                              Fill: =varTheme.black
+                              Height: =80
+                              OnChange: |-
+                                =UpdateContext({
+                                  locOverrideReason: Self.Text
+                                })
+                              Placeholder: ="Reason for the exception"
+                              Type: =TextInputType.Multiline
+                              Visible: =locFormException
+                        - grpFormButtons:
+                            Control: GroupContainer
+                            Variant: AutoLayout
+                            Properties:
+                              FillPortions: =0
+                              Height: =44
+                              LayoutAlignItems: =LayoutAlignItems.Center
+                              LayoutDirection: =LayoutDirection.Horizontal
+                              LayoutGap: =8
+                              LayoutJustifyContent: =LayoutJustifyContent.End
+                              LayoutMinHeight: =0
+                              LayoutMinWidth: =0
+                            Children:
+                              - btnFormCancel:
+                                  Control: Button
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Center
+                                    Appearance: ='ButtonCanvas.Appearance'.Transparent
+                                    BasePaletteColor: =varTheme.silver
+                                    Height: =40
+                                    OnSelect: =Set(varShowNominationForm, false)
+                                    Text: ="Cancel"
+                                    Width: =120
+                              - btnFormConfirm:
+                                  Control: Button
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Center
+                                    BasePaletteColor: =varTheme.gold
+                                    DisplayMode: =If(Len(locJustification) > 0 && (!locFormException || Len(locOverrideReason) > 0), DisplayMode.Edit, DisplayMode.Disabled)
+                                    Height: =40
+                                    OnSelect: |-
+                                      =With(
+                                        { newId: "NOM-" & Text(Now(), "yymmddhhmmss") },
+                                        Patch(
+                                          '04_Nominations',
+                                          Defaults('04_Nominations'),
+                                          {
+                                            Title:   newId,
+                                            field_1:        Value(locFormEmp.CarolID),
+                                            field_3:       Value(varSelectedCourse.CourseID),
+                                            field_6:     varSelectedCourse.Investment,
+                                            field_7:       ((varSelectedCourse.MinMonthsCompany <= 0 || locFormEmp.MonthsCompany >= varSelectedCourse.MinMonthsCompany) && (varSelectedCourse.MinMonthsDivision <= 0 || locFormEmp.MonthsDivision >= varSelectedCourse.MinMonthsDivision) && (varSelectedCourse.MaxAge <= 0 || locFormEmp.Age <= varSelectedCourse.MaxAge) && (IsBlank(varSelectedCourse.RequiredCourseCode) || varSelectedCourse.RequiredCourseCode = "" || varSelectedCourse.RequiredCourseCode in Split(Coalesce(locFormEmp.CompletedCourses, ""), ",")) && ((varSelectedCourse.DivisionRangeMin <= 0 && varSelectedCourse.DivisionRangeMax <= 0) || (locFormEmp.MonthsDivision >= varSelectedCourse.DivisionRangeMin && locFormEmp.MonthsDivision <= varSelectedCourse.DivisionRangeMax))),
+                                            field_8:    locFormException,
+                                            field_9: locOverrideReason,
+                                            field_10:          (Switch(locFormEmp.TalentClass, "Future Leaders", 30, "Rising Players", 22, "Essential Players", 15, 0) + If(locFormEmp.SuccessionPipeline = "Yes", 20, 0) + Switch(locFormEmp.PastSBNCount, 0, 15, 1, 5, 0) + Switch(locFormEmp.FlightRisk, "High", 15, "Medium", 8, 0) + Switch(locFormEmp.Performance, "Exceeds Expectations", 20, "Strong Performer", 14, "Meets Expectations", 8, 3)),
+                                            field_11: "nominated",
+                                            field_12:    Now(),
+                                            field_13:  locJustification,
+                                            field_14: varCurrentUser.role,
+                                            field_15: varCurrentUser.email,
+                                            field_16:       Blank()
+                                          }
+                                        );
+                                        Patch(
+                                          '05_NominationHistory',
+                                          Defaults('05_NominationHistory'),
+                                          {
+                                            Title:        newId & "-create",
+                                            field_1: newId,
+                                            field_2: "created",
+                                            field_3:    varCurrentUser.email,
+                                            field_4:     varCurrentUser.name,
+                                            field_5:    Now(),
+                                            field_6:      "Nominated for " & varSelectedCourse.CourseName & If(locFormException, " (Exception - Out of Target): " & locOverrideReason, "")
+                                          }
+                                        )
+                                      );
+                                      ClearCollect(colNominations, '04_Nominations');
+                                      ClearCollect(colHistory, '05_NominationHistory');
+                                      Set(varShowNominationForm, false);
+                                      Notify("Nomination created.", NotificationType.Success)
+                                    Text: ="Confirm Nomination"
+                                    Width: =180
+

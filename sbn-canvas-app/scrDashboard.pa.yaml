@@ -1,0 +1,1688 @@
+Screens:
+  scrDashboard:
+    Properties:
+      Fill: =varTheme.black
+      # touch
+      OnVisible: =Set(varCurrentPage, "dashboard")
+    Children:
+      - grpRoot:
+          Control: GroupContainer
+          Variant: ManualLayout
+          Properties:
+            Fill: =varTheme.black
+            Height: =Parent.Height
+            Width: =Parent.Width
+          Children:
+            - grpSidebar:
+                Control: GroupContainer
+                Variant: ManualLayout
+                Properties:
+                  Fill: =varTheme.darkGray
+                  Height: =Parent.Height
+                  Width: =240
+                Children:
+                  - dshRectSidebarBorder:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.medGray
+                        Height: =Parent.Height
+                        Width: =1
+                        X: =239
+                  - dshLblWordmark:
+                      Control: Label
+                      Properties:
+                        Color: =varTheme.white
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.serif
+                        FontWeight: =FontWeight.Bold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =22
+                        Text: ="L'ORÉAL"
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =32
+                  - dshLblWordmarkSub:
+                      Control: Label
+                      Properties:
+                        Color: =varTheme.gold
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontWeight: =FontWeight.Semibold
+                        Height: =14
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =9
+                        Text: ="SEMINAR BY NOMINATION"
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =66
+                  - dshRectNavDashboardActive:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "dashboard"
+                        Width: =3
+                        Y: =120
+                  - dshRectNavDashboardFill:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =If(varCurrentPage = "dashboard", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =120
+                  - dshLblNavDashboard:
+                      Control: Label
+                      Properties:
+                        Color: =If(varCurrentPage = "dashboard", varTheme.white, varTheme.silver)
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontWeight: =If(varCurrentPage = "dashboard", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Dashboard"
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =120
+                  - dshBtnNavDashboard:
+                      Control: Button
+                      Properties:
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        BorderColor: =RGBA(0,0,0,0)
+                        Height: =44
+                        OnSelect: =Set(varCurrentPage, "dashboard")
+                        Text: =""
+                        Width: =240
+                        Y: =120
+                  - dshRectNavCoursesActive:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "catalog"
+                        Width: =3
+                        Y: =168
+                  - dshRectNavCoursesFill:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =If(varCurrentPage = "catalog", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =168
+                  - dshLblNavCourses:
+                      Control: Label
+                      Properties:
+                        Color: =If(varCurrentPage = "catalog", varTheme.white, varTheme.silver)
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontWeight: =If(varCurrentPage = "catalog", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Courses"
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =168
+                  - dshBtnNavCourses:
+                      Control: Button
+                      Properties:
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        BorderColor: =RGBA(0,0,0,0)
+                        Height: =44
+                        OnSelect: |-
+                          =Set(varCurrentPage, "catalog");
+                          Navigate(scrCatalog, ScreenTransition.Fade)
+                        Text: =""
+                        Width: =240
+                        Y: =168
+                  - dshRectNavEmployeesActive:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "employees"
+                        Width: =3
+                        Y: =216
+                  - dshRectNavEmployeesFill:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =If(varCurrentPage = "employees", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =216
+                  - dshLblNavEmployees:
+                      Control: Label
+                      Properties:
+                        Color: =If(varCurrentPage = "employees", varTheme.white, varTheme.silver)
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontWeight: =If(varCurrentPage = "employees", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Employees"
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =216
+                  - dshBtnNavEmployees:
+                      Control: Button
+                      Properties:
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        BorderColor: =RGBA(0,0,0,0)
+                        Height: =44
+                        OnSelect: |-
+                          =Set(varCurrentPage, "employees");
+                          Navigate(scrEmployees, ScreenTransition.Fade)
+                        Text: =""
+                        Width: =240
+                        Y: =216
+                  - dshRectNavNominationsActive:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "nominations"
+                        Width: =3
+                        Y: =264
+                  - dshRectNavNominationsFill:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =If(varCurrentPage = "nominations", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =264
+                  - dshLblNavNominations:
+                      Control: Label
+                      Properties:
+                        Color: =If(varCurrentPage = "nominations", varTheme.white, varTheme.silver)
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontWeight: =If(varCurrentPage = "nominations", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Nominations"
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =264
+                  - dshBtnNavNominations:
+                      Control: Button
+                      Properties:
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        BorderColor: =RGBA(0,0,0,0)
+                        Height: =44
+                        OnSelect: |-
+                          =Set(varCurrentPage, "nominations");
+                          Navigate(scrNominations, ScreenTransition.Fade)
+                        Text: =""
+                        Width: =240
+                        Y: =264
+                  - dshRectNavSeatsActive:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "seats"
+                        Width: =3
+                        Y: =312
+                  - dshRectNavSeatsFill:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =If(varCurrentPage = "seats", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =312
+                  - dshLblNavSeats:
+                      Control: Label
+                      Properties:
+                        Color: =If(varCurrentPage = "seats", varTheme.white, varTheme.silver)
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontWeight: =If(varCurrentPage = "seats", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Seats"
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =312
+                  - dshBtnNavSeats:
+                      Control: Button
+                      Properties:
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        BorderColor: =RGBA(0,0,0,0)
+                        Height: =44
+                        OnSelect: |-
+                          =Set(varCurrentPage, "seats");
+                          Navigate(scrSeats, ScreenTransition.Fade)
+                        Text: =""
+                        Width: =240
+                        Y: =312
+                  - dshRectNavPdlActive:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "pdl"
+                        Width: =3
+                        Y: =360
+                  - dshRectNavPdlFill:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =If(varCurrentPage = "pdl", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =360
+                  - dshLblNavPdl:
+                      Control: Label
+                      Properties:
+                        Color: =If(varCurrentPage = "pdl", varTheme.white, varTheme.silver)
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontWeight: =If(varCurrentPage = "pdl", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="PDL LATAM"
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =360
+                  - dshBtnNavPdl:
+                      Control: Button
+                      Properties:
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        BorderColor: =RGBA(0,0,0,0)
+                        Height: =44
+                        OnSelect: |-
+                          =Set(varCurrentPage, "pdl");
+                          Navigate(scrPDLLatam, ScreenTransition.Fade)
+                        Text: =""
+                        Width: =240
+                        Y: =360
+                  - dshRectNavCriteriaActive:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "criteria"
+                        Width: =3
+                        Y: =408
+                  - dshRectNavCriteriaFill:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =If(varCurrentPage = "criteria", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =408
+                  - dshLblNavCriteria:
+                      Control: Label
+                      Properties:
+                        Color: =If(varCurrentPage = "criteria", varTheme.white, varTheme.silver)
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontWeight: =If(varCurrentPage = "criteria", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Criteria"
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =408
+                  - dshBtnNavCriteria:
+                      Control: Button
+                      Properties:
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        BorderColor: =RGBA(0,0,0,0)
+                        Height: =44
+                        OnSelect: |-
+                          =Set(varCurrentPage, "criteria");
+                          Navigate(scrCriteria, ScreenTransition.Fade)
+                        Text: =""
+                        Width: =240
+                        Y: =408
+                  - dshRectFooterDivider:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.medGray
+                        Height: =1
+                        Width: =192
+                        X: =24
+                        Y: =Parent.Height - 112
+                  - dshLblUserName:
+                      Control: Label
+                      Properties:
+                        Color: =varTheme.offWhite
+                        Font: =varTheme.sans
+                        FontWeight: =FontWeight.Semibold
+                        Height: =20
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Text: =varCurrentUser.name
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =Parent.Height - 96
+                  - dshLblUserRole:
+                      Control: Label
+                      Properties:
+                        Color: =varTheme.lightGray
+                        Font: =varTheme.sans
+                        Height: =16
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: =varCurrentUser.role
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =Parent.Height - 74
+                  - dshLblUserEmail:
+                      Control: Label
+                      Properties:
+                        Color: =varTheme.lightGray
+                        Font: =varTheme.sans
+                        Height: =14
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: =varCurrentUser.email
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =Parent.Height - 56
+            - grpContent:
+                Control: GroupContainer
+                Variant: AutoLayout
+                Properties:
+                  Fill: =varTheme.black
+                  Height: =Parent.Height
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Vertical
+                  LayoutGap: =24
+                  LayoutOverflowY: =LayoutOverflow.Scroll
+                  PaddingBottom: =32
+                  PaddingLeft: =32
+                  PaddingRight: =32
+                  PaddingTop: =32
+                  Width: =Parent.Width - 240
+                  X: =240
+                Children:
+                  - grpHeader:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        Fill: =RGBA(0,0,0,0)
+                        FillPortions: =0
+                        Height: =72
+                        LayoutAlignItems: =LayoutAlignItems.Center
+                        LayoutDirection: =LayoutDirection.Horizontal
+                        LayoutGap: =16
+                        LayoutJustifyContent: =LayoutJustifyContent.SpaceBetween
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                      Children:
+                        - grpHeaderText:
+                            Control: GroupContainer
+                            Variant: AutoLayout
+                            Properties:
+                              Fill: =RGBA(0,0,0,0)
+                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutGap: =4
+                              LayoutJustifyContent: =LayoutJustifyContent.Center
+                              LayoutMinHeight: =0
+                              LayoutMinWidth: =0
+                            Children:
+                              - lblPageTitle:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.white
+                                    Fill: =RGBA(0,0,0,0)
+                                    Font: =varTheme.serif
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =44
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =32
+                                    Text: ="Dashboard"
+                                    Wrap: =false
+                              - lblPageSubtitle:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.silver
+                                    Font: =varTheme.sans
+                                    Height: =20
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Text: ="Strategic overview of nominations, seats and investment across LATAM zones"
+                                    Wrap: =false
+                        - btnExport:
+                            Control: Button
+                            Properties:
+                              AlignInContainer: =AlignInContainer.Center
+                              Appearance: ='ButtonCanvas.Appearance'.Primary
+                              BasePaletteColor: =varTheme.gold
+                              BorderColor: =varTheme.goldDark
+                              BorderThickness: =1
+                              Font: =varTheme.sans
+                              FontColor: =varTheme.black
+                              FontSize: =13
+                              FontWeight: =FontWeight.Semibold
+                              Height: =44
+                              OnSelect: =Notify("Power Automate export flow pending", NotificationType.Information)
+                              Text: ="Export to Excel"
+                              Width: =180
+                  - grpKpiRow:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        Fill: =RGBA(0,0,0,0)
+                        FillPortions: =0
+                        Height: =120
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Horizontal
+                        LayoutGap: =16
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                      Children:
+                        - cardKpiNominations:
+                            Control: GroupContainer
+                            Variant: AutoLayout
+                            Properties:
+                              BorderColor: =varTheme.lightGray
+                              BorderThickness: =1
+                              Fill: =varTheme.darkGray
+                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutGap: =6
+                              LayoutJustifyContent: =LayoutJustifyContent.Center
+                              LayoutMinHeight: =0
+                              LayoutMinWidth: =0
+                              PaddingBottom: =16
+                              PaddingLeft: =16
+                              PaddingRight: =16
+                              PaddingTop: =16
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                            Children:
+                              - lblKpi1Label:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.silver
+                                    Font: =varTheme.sans
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =16
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =11
+                                    Text: ="TOTAL NOMINATIONS"
+                                    Wrap: =false
+                              - lblKpi1Value:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.white
+                                    Font: =varTheme.serif
+                                    FontWeight: =FontWeight.Bold
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =28
+                                    Text: =Text(CountRows(colNominations))
+                                    Wrap: =false
+                              - lblKpi1Sub:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.gold
+                                    Font: =varTheme.sans
+                                    Height: =16
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =11
+                                    Text: |-
+                                      ="vs " & varPrevYearTotals.nominations & " (" &
+                                        Text(Round((CountRows(colNominations) - varPrevYearTotals.nominations) / varPrevYearTotals.nominations * 100, 0)) & "%)"
+                                    Wrap: =false
+                        - cardKpiInvestment:
+                            Control: GroupContainer
+                            Variant: AutoLayout
+                            Properties:
+                              BorderColor: =varTheme.lightGray
+                              BorderThickness: =1
+                              Fill: =varTheme.darkGray
+                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutGap: =6
+                              LayoutJustifyContent: =LayoutJustifyContent.Center
+                              LayoutMinHeight: =0
+                              LayoutMinWidth: =0
+                              PaddingBottom: =16
+                              PaddingLeft: =16
+                              PaddingRight: =16
+                              PaddingTop: =16
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                            Children:
+                              - lblKpi2Label:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.silver
+                                    Font: =varTheme.sans
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =16
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =11
+                                    Text: ="TOTAL INVESTMENT"
+                                    Wrap: =false
+                              - lblKpi2Value:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.white
+                                    Font: =varTheme.serif
+                                    FontWeight: =FontWeight.Bold
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =28
+                                    Text: =Text(Sum(colNominations, Investment), "[$-en-US]$#,##0")
+                                    Wrap: =false
+                              - lblKpi2Sub:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.gold
+                                    Font: =varTheme.sans
+                                    Height: =16
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =11
+                                    Text: |-
+                                      ="vs " & Text(varPrevYearTotals.investment, "[$-en-US]$#,##0") & " (" &
+                                        Text(Round((Sum(colNominations, Investment) - varPrevYearTotals.investment) / varPrevYearTotals.investment * 100, 0)) & "%)"
+                                    Wrap: =false
+                        - cardKpiApproved:
+                            Control: GroupContainer
+                            Variant: AutoLayout
+                            Properties:
+                              BorderColor: =varTheme.lightGray
+                              BorderThickness: =1
+                              Fill: =varTheme.darkGray
+                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutGap: =6
+                              LayoutJustifyContent: =LayoutJustifyContent.Center
+                              LayoutMinHeight: =0
+                              LayoutMinWidth: =0
+                              PaddingBottom: =16
+                              PaddingLeft: =16
+                              PaddingRight: =16
+                              PaddingTop: =16
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                            Children:
+                              - lblKpi3Label:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.silver
+                                    Font: =varTheme.sans
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =16
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =11
+                                    Text: ="APPROVED (FINAL)"
+                                    Wrap: =false
+                              - lblKpi3Value:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.white
+                                    Font: =varTheme.serif
+                                    FontWeight: =FontWeight.Bold
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =28
+                                    Text: =Text(CountIf(colNominations, Status = "final"))
+                                    Wrap: =false
+                              - lblKpi3Sub:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.gold
+                                    Font: =varTheme.sans
+                                    Height: =16
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =11
+                                    Text: |-
+                                      ="vs " & varPrevYearTotals.approved & " (" &
+                                        Text(Round((CountIf(colNominations, Status = "final") - varPrevYearTotals.approved) / varPrevYearTotals.approved * 100, 0)) & "%)"
+                                    Wrap: =false
+                  - cardWorkflow:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =varTheme.lightGray
+                        BorderThickness: =1
+                        Fill: =varTheme.darkGray
+                        FillPortions: =0
+                        Height: =180
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =16
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                        PaddingBottom: =24
+                        PaddingLeft: =24
+                        PaddingRight: =24
+                        PaddingTop: =24
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                      Children:
+                        - lblWorkflowTitle:
+                            Control: Label
+                            Properties:
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =varTheme.white
+                              Font: =varTheme.serif
+                              FontWeight: =FontWeight.Semibold
+                              Height: =28
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =20
+                              Text: ="Approval Workflow"
+                              Wrap: =false
+                        - grpTrackerRow:
+                            Control: GroupContainer
+                            Variant: AutoLayout
+                            Properties:
+                              Fill: =RGBA(0,0,0,0)
+                              FillPortions: =0
+                              Height: =84
+                              LayoutAlignItems: =LayoutAlignItems.Center
+                              LayoutDirection: =LayoutDirection.Horizontal
+                              LayoutJustifyContent: =LayoutJustifyContent.Center
+                              LayoutMinHeight: =0
+                              LayoutMinWidth: =0
+                            Children:
+                              - grpStage1:
+                                  Control: GroupContainer
+                                  Variant: AutoLayout
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Center
+                                    Fill: =RGBA(0,0,0,0)
+                                    FillPortions: =0
+                                    Height: =72
+                                    LayoutAlignItems: =LayoutAlignItems.Center
+                                    LayoutDirection: =LayoutDirection.Vertical
+                                    LayoutGap: =8
+                                    LayoutJustifyContent: =LayoutJustifyContent.Center
+                                    LayoutMinHeight: =0
+                                    LayoutMinWidth: =0
+                                    Width: =220
+                                  Children:
+                                    - circStage1:
+                                        Control: Circle
+                                        Properties:
+                                          AlignInContainer: =AlignInContainer.Center
+                                          BorderColor: =varTheme.gold
+                                          Fill: =varTheme.gold
+                                          Height: =44
+                                          Width: =44
+                                    - lblStage1:
+                                        Control: Label
+                                        Properties:
+                                          Align: =Align.Center
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          Color: =varTheme.offWhite
+                                          Font: =varTheme.sans
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =18
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =12
+                                          Text: ="PDL Country"
+                                          Wrap: =false
+                              - rectConn1:
+                                  Control: Rectangle
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Center
+                                    Fill: =varTheme.medGray
+                                    FillPortions: =1
+                                    Height: =2
+                              - grpStage2:
+                                  Control: GroupContainer
+                                  Variant: AutoLayout
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Center
+                                    Fill: =RGBA(0,0,0,0)
+                                    FillPortions: =0
+                                    Height: =72
+                                    LayoutAlignItems: =LayoutAlignItems.Center
+                                    LayoutDirection: =LayoutDirection.Vertical
+                                    LayoutGap: =8
+                                    LayoutJustifyContent: =LayoutJustifyContent.Center
+                                    LayoutMinHeight: =0
+                                    LayoutMinWidth: =0
+                                    Width: =220
+                                  Children:
+                                    - circStage2:
+                                        Control: Circle
+                                        Properties:
+                                          AlignInContainer: =AlignInContainer.Center
+                                          BorderColor: =varTheme.lightGray
+                                          Fill: =varTheme.medGray
+                                          Height: =44
+                                          Width: =44
+                                    - lblStage2:
+                                        Control: Label
+                                        Properties:
+                                          Align: =Align.Center
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          Color: =varTheme.lightGray
+                                          Font: =varTheme.sans
+                                          Height: =18
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =12
+                                          Text: ="Country HRD"
+                                          Wrap: =false
+                              - rectConn2:
+                                  Control: Rectangle
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Center
+                                    Fill: =varTheme.medGray
+                                    FillPortions: =1
+                                    Height: =2
+                              - grpStage3:
+                                  Control: GroupContainer
+                                  Variant: AutoLayout
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Center
+                                    Fill: =RGBA(0,0,0,0)
+                                    FillPortions: =0
+                                    Height: =72
+                                    LayoutAlignItems: =LayoutAlignItems.Center
+                                    LayoutDirection: =LayoutDirection.Vertical
+                                    LayoutGap: =8
+                                    LayoutJustifyContent: =LayoutJustifyContent.Center
+                                    LayoutMinHeight: =0
+                                    LayoutMinWidth: =0
+                                    Width: =220
+                                  Children:
+                                    - circStage3:
+                                        Control: Circle
+                                        Properties:
+                                          AlignInContainer: =AlignInContainer.Center
+                                          BorderColor: =varTheme.lightGray
+                                          Fill: =varTheme.medGray
+                                          Height: =44
+                                          Width: =44
+                                    - lblStage3:
+                                        Control: Label
+                                        Properties:
+                                          Align: =Align.Center
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          Color: =varTheme.lightGray
+                                          Font: =varTheme.sans
+                                          Height: =18
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =12
+                                          Text: ="Zone HRDs + PDL"
+                                          Wrap: =false
+                  - grpGrid2:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        Fill: =RGBA(0,0,0,0)
+                        FillPortions: =0
+                        Height: =360
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Horizontal
+                        LayoutGap: =16
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                      Children:
+                        - cardSeatsByCountry:
+                            Control: GroupContainer
+                            Variant: AutoLayout
+                            Properties:
+                              BorderColor: =varTheme.lightGray
+                              BorderThickness: =1
+                              Fill: =varTheme.darkGray
+                              LayoutAlignItems: =LayoutAlignItems.Stretch
+                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutGap: =16
+                              LayoutMinHeight: =0
+                              LayoutMinWidth: =0
+                              PaddingBottom: =24
+                              PaddingLeft: =24
+                              PaddingRight: =24
+                              PaddingTop: =24
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                            Children:
+                              - lblSeatsTitle:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.white
+                                    Font: =varTheme.serif
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =28
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =20
+                                    Text: ="Seats by Country"
+                                    Wrap: =false
+                              - galSeatsByCountry:
+                                  Control: Gallery
+                                  Variant: Vertical
+                                  Properties:
+                                    Items: |-
+                                      =AddColumns(
+                                        colCountrySeats As cs,
+                                        used,
+                                        CountIf(
+                                          colNominations As nom,
+                                          LookUp(colEmployees As emp, Value(emp.CarolID) = nom.CarolID).Country = cs.country
+                                            && nom.Status <> "rejected"
+                                        )
+                                      )
+                                    ShowScrollbar: =false
+                                    TemplateSize: =56
+                                  Children:
+                                    - lblSeatCountry:
+                                        Control: Label
+                                        Properties:
+                                          Color: =varTheme.offWhite
+                                          Font: =varTheme.sans
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =20
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Text: =ThisItem.country
+                                          Width: =120
+                                          Wrap: =false
+                                          Y: =8
+                                    - rectSeatTrack:
+                                        Control: Rectangle
+                                        Properties:
+                                          Fill: =varTheme.medGray
+                                          Height: =8
+                                          Width: =Parent.TemplateWidth - 220
+                                          X: =136
+                                          Y: =16
+                                    - rectSeatFill:
+                                        Control: Rectangle
+                                        Properties:
+                                          Fill: =If(ThisItem.seats = 0, varTheme.gold, If((ThisItem.used / ThisItem.seats) >= 0.9, varTheme.danger, If((ThisItem.used / ThisItem.seats) >= 0.7, varTheme.warning, varTheme.gold)))
+                                          Height: =8
+                                          Width: |-
+                                            =(Parent.TemplateWidth - 220) *
+                                              If(ThisItem.seats = 0, 0,
+                                                 Min(1, ThisItem.used / ThisItem.seats))
+                                          X: =136
+                                          Y: =16
+                                    - lblSeatCount:
+                                        Control: Label
+                                        Properties:
+                                          Align: =Align.Right
+                                          Color: =varTheme.gold
+                                          Font: =varTheme.sans
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =20
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =12
+                                          Text: =ThisItem.used & " / " & ThisItem.seats
+                                          Width: =72
+                                          Wrap: =false
+                                          X: =Parent.TemplateWidth - 80
+                                          Y: =8
+                        - cardBudgetByCountry:
+                            Control: GroupContainer
+                            Variant: AutoLayout
+                            Properties:
+                              BorderColor: =varTheme.lightGray
+                              BorderThickness: =1
+                              Fill: =varTheme.darkGray
+                              LayoutAlignItems: =LayoutAlignItems.Stretch
+                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutGap: =16
+                              LayoutMinHeight: =0
+                              LayoutMinWidth: =0
+                              PaddingBottom: =24
+                              PaddingLeft: =24
+                              PaddingRight: =24
+                              PaddingTop: =24
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                            Children:
+                              - lblBudgetTitle:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.white
+                                    Font: =varTheme.serif
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =28
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =20
+                                    Text: ="Budget by Country"
+                                    Wrap: =false
+                              - galBudgetByCountry:
+                                  Control: Gallery
+                                  Variant: Vertical
+                                  Properties:
+                                    Items: |-
+                                      =AddColumns(
+                                        colCountrySeats As cs,
+                                        spent,
+                                        Sum(
+                                          Filter(
+                                            colNominations,
+                                            LookUp(colEmployees As emp, Value(emp.CarolID) = colNominations[@CarolID]).Country = cs.country
+                                              && Status <> "rejected"
+                                          ),
+                                          Investment
+                                        )
+                                      )
+                                    ShowScrollbar: =false
+                                    TemplateSize: =56
+                                  Children:
+                                    - lblBudgetCountry:
+                                        Control: Label
+                                        Properties:
+                                          Color: =varTheme.offWhite
+                                          Font: =varTheme.sans
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =20
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Text: =ThisItem.country
+                                          Width: =120
+                                          Wrap: =false
+                                          Y: =8
+                                    - rectBudgetTrack:
+                                        Control: Rectangle
+                                        Properties:
+                                          Fill: =varTheme.medGray
+                                          Height: =8
+                                          Width: =Parent.TemplateWidth - 280
+                                          X: =136
+                                          Y: =16
+                                    - rectBudgetFill:
+                                        Control: Rectangle
+                                        Properties:
+                                          Fill: =If(ThisItem.budget = 0, varTheme.gold, If((ThisItem.spent / ThisItem.budget) >= 0.9, varTheme.danger, If((ThisItem.spent / ThisItem.budget) >= 0.7, varTheme.warning, varTheme.gold)))
+                                          Height: =8
+                                          Width: |-
+                                            =(Parent.TemplateWidth - 280) *
+                                              If(ThisItem.budget = 0, 0,
+                                                 Min(1, ThisItem.spent / ThisItem.budget))
+                                          X: =136
+                                          Y: =16
+                                    - lblBudgetAmount:
+                                        Control: Label
+                                        Properties:
+                                          Align: =Align.Right
+                                          Color: =varTheme.gold
+                                          Font: =varTheme.sans
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =20
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =11
+                                          Text: |-
+                                            =Text(ThisItem.spent, "[$-en-US]$#,##0") & " / " &
+                                              Text(ThisItem.budget, "[$-en-US]$#,##0")
+                                          Width: =132
+                                          Wrap: =false
+                                          X: =Parent.TemplateWidth - 140
+                                          Y: =8
+                  - grpGrid3:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        Fill: =RGBA(0,0,0,0)
+                        FillPortions: =0
+                        Height: =380
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Horizontal
+                        LayoutGap: =16
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                      Children:
+                        - cardByCountry:
+                            Control: GroupContainer
+                            Variant: AutoLayout
+                            Properties:
+                              BorderColor: =varTheme.lightGray
+                              BorderThickness: =1
+                              Fill: =varTheme.darkGray
+                              LayoutAlignItems: =LayoutAlignItems.Stretch
+                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutGap: =12
+                              LayoutMinHeight: =0
+                              LayoutMinWidth: =0
+                              PaddingBottom: =24
+                              PaddingLeft: =24
+                              PaddingRight: =24
+                              PaddingTop: =24
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                            Children:
+                              - lblByCountryTitle:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.white
+                                    Font: =varTheme.serif
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =28
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =20
+                                    Text: ="By Country"
+                                    Wrap: =false
+                              - galByCountry:
+                                  Control: Gallery
+                                  Variant: Vertical
+                                  Properties:
+                                    Items: |-
+                                      =AddColumns(
+                                        colCountrySeats As cs,
+                                        nCount,
+                                        CountIf(
+                                          colNominations As nom,
+                                          LookUp(colEmployees As emp, Value(emp.CarolID) = nom.CarolID).Country = cs.country
+                                        )
+                                      )
+                                    ShowScrollbar: =false
+                                    TemplateSize: =48
+                                  Children:
+                                    - lblByCountryName:
+                                        Control: Label
+                                        Properties:
+                                          Color: =varTheme.offWhite
+                                          Font: =varTheme.sans
+                                          Height: =18
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =12
+                                          Text: =ThisItem.country
+                                          Width: =110
+                                          Wrap: =false
+                                          Y: =6
+                                    - rectByCountryTrack:
+                                        Control: Rectangle
+                                        Properties:
+                                          Fill: =varTheme.medGray
+                                          Height: =6
+                                          Width: =Parent.TemplateWidth - 40
+                                          Y: =28
+                                    - rectByCountryFill:
+                                        Control: Rectangle
+                                        Properties:
+                                          Fill: =varTheme.gold
+                                          Height: =6
+                                          Width: |-
+                                            =(Parent.TemplateWidth - 40) *
+                                              If(20 = 0, 0,
+                                                 ThisItem.nCount / 20)
+                                          Y: =28
+                                    - lblByCountryCount:
+                                        Control: Label
+                                        Properties:
+                                          Align: =Align.Right
+                                          Color: =varTheme.gold
+                                          Font: =varTheme.sans
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =18
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =12
+                                          Text: =Text(ThisItem.nCount)
+                                          Width: =32
+                                          Wrap: =false
+                                          X: =Parent.TemplateWidth - 40
+                                          Y: =6
+                        - cardTopCourses:
+                            Control: GroupContainer
+                            Variant: AutoLayout
+                            Properties:
+                              BorderColor: =varTheme.lightGray
+                              BorderThickness: =1
+                              Fill: =varTheme.darkGray
+                              LayoutAlignItems: =LayoutAlignItems.Stretch
+                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutGap: =12
+                              LayoutMinHeight: =0
+                              LayoutMinWidth: =0
+                              PaddingBottom: =24
+                              PaddingLeft: =24
+                              PaddingRight: =24
+                              PaddingTop: =24
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                            Children:
+                              - lblTopCoursesTitle:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.white
+                                    Fill: =RGBA(0,0,0,0)
+                                    Font: =varTheme.serif
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =28
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =20
+                                    Text: ="Top 5 Courses"
+                                    Wrap: =false
+                              - galTopCourses:
+                                  Control: Gallery
+                                  Variant: Vertical
+                                  Properties:
+                                    Items: |-
+                                      =FirstN(
+                                        SortByColumns(
+                                          AddColumns(
+                                            colCourses As crs,
+                                            nCount,
+                                            CountIf(colNominations As nom, nom.CourseID = Value(crs.CourseID))
+                                          ),
+                                          "nCount",
+                                          SortOrder.Descending
+                                        ),
+                                        5
+                                      )
+                                    ShowScrollbar: =false
+                                    TemplateSize: =56
+                                  Children:
+                                    - lblTopCourseCode:
+                                        Control: Label
+                                        Properties:
+                                          Color: =varTheme.gold
+                                          Font: =varTheme.sans
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =14
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =10
+                                          Text: =Upper(ThisItem.Code)
+                                          Width: =80
+                                          Wrap: =false
+                                          Y: =6
+                                    - lblTopCourseName:
+                                        Control: Label
+                                        Properties:
+                                          Color: =varTheme.offWhite
+                                          Font: =varTheme.sans
+                                          Height: =16
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =12
+                                          Text: =ThisItem.CourseName
+                                          Width: =Parent.TemplateWidth - 40
+                                          Wrap: =false
+                                          Y: =22
+                                    - lblTopCourseCount:
+                                        Control: Label
+                                        Properties:
+                                          Align: =Align.Right
+                                          Color: =varTheme.gold
+                                          Font: =varTheme.serif
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =20
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =14
+                                          Text: =Text(ThisItem.nCount)
+                                          Width: =32
+                                          Wrap: =false
+                                          X: =Parent.TemplateWidth - 40
+                                          Y: =14
+                        - cardByClass:
+                            Control: GroupContainer
+                            Variant: AutoLayout
+                            Properties:
+                              BorderColor: =varTheme.lightGray
+                              BorderThickness: =1
+                              Fill: =varTheme.darkGray
+                              LayoutAlignItems: =LayoutAlignItems.Stretch
+                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutGap: =12
+                              LayoutMinHeight: =0
+                              LayoutMinWidth: =0
+                              PaddingBottom: =24
+                              PaddingLeft: =24
+                              PaddingRight: =24
+                              PaddingTop: =24
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                            Children:
+                              - lblByClassTitle:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.white
+                                    Font: =varTheme.serif
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =28
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =20
+                                    Text: ="By Classification"
+                                    Wrap: =false
+                              - galByClass:
+                                  Control: Gallery
+                                  Variant: Vertical
+                                  Properties:
+                                    Items: |-
+                                      =AddColumns(
+                                        Table(
+                                          { lblText: "Future Leaders" },
+                                          { lblText: "Rising Players" },
+                                          { lblText: "Essential Players" }
+                                        ) As cls,
+                                        nCount,
+                                        CountIf(
+                                          colNominations As nom,
+                                          LookUp(colEmployees As emp, Value(emp.CarolID) = nom.CarolID).TalentClass = cls.lblText
+                                        )
+                                      )
+                                    ShowScrollbar: =false
+                                    TemplateSize: =56
+                                  Children:
+                                    - rectClassBadge:
+                                        Control: Rectangle
+                                        Properties:
+                                          BorderColor: =varTheme.gold
+                                          BorderThickness: =1
+                                          Fill: =varTheme.goldSoft
+                                          Height: =40
+                                          Width: =Parent.TemplateWidth - 50
+                                          Y: =8
+                                    - lblClassLabel:
+                                        Control: Label
+                                        Properties:
+                                          Color: =varTheme.gold
+                                          Font: =varTheme.sans
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =24
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =12
+                                          Text: =ThisItem.lblText
+                                          Width: =Parent.TemplateWidth - 80
+                                          Wrap: =false
+                                          X: =12
+                                          Y: =16
+                                    - lblClassCount:
+                                        Control: Label
+                                        Properties:
+                                          Align: =Align.Right
+                                          Color: =varTheme.white
+                                          Font: =varTheme.serif
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =28
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =16
+                                          Text: =Text(ThisItem.nCount)
+                                          Width: =32
+                                          Wrap: =false
+                                          X: =Parent.TemplateWidth - 40
+                                          Y: =14
+                  - grpGrid4:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        Fill: =RGBA(0,0,0,0)
+                        FillPortions: =0
+                        Height: =380
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Horizontal
+                        LayoutGap: =16
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                      Children:
+                        - cardByDivision:
+                            Control: GroupContainer
+                            Variant: AutoLayout
+                            Properties:
+                              BorderColor: =varTheme.lightGray
+                              BorderThickness: =1
+                              Fill: =varTheme.darkGray
+                              LayoutAlignItems: =LayoutAlignItems.Stretch
+                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutGap: =12
+                              LayoutMinHeight: =0
+                              LayoutMinWidth: =0
+                              PaddingBottom: =24
+                              PaddingLeft: =24
+                              PaddingRight: =24
+                              PaddingTop: =24
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                            Children:
+                              - lblByDivisionTitle:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.white
+                                    Font: =varTheme.serif
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =28
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =20
+                                    Text: ="By Professional Field"
+                                    Wrap: =false
+                              - galByDivision:
+                                  Control: Gallery
+                                  Variant: Vertical
+                                  Properties:
+                                    Items: |-
+                                      =AddColumns(
+                                        RenameColumns(Distinct(colEmployees, Division), Value, lblText) As dv,
+                                        nCount,
+                                        CountIf(
+                                          colNominations As nom,
+                                          LookUp(colEmployees As emp, Value(emp.CarolID) = nom.CarolID).Division = dv.lblText
+                                        )
+                                      )
+                                    ShowScrollbar: =false
+                                    TemplateSize: =40
+                                  Children:
+                                    - lblDivisionName:
+                                        Control: Label
+                                        Properties:
+                                          Color: =varTheme.offWhite
+                                          Font: =varTheme.sans
+                                          Height: =18
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =12
+                                          Text: =ThisItem.lblText
+                                          Width: =160
+                                          Wrap: =false
+                                          Y: =4
+                                    - rectDivisionTrack:
+                                        Control: Rectangle
+                                        Properties:
+                                          Fill: =varTheme.medGray
+                                          Height: =6
+                                          Width: =Parent.TemplateWidth - 220
+                                          X: =168
+                                          Y: =14
+                                    - rectDivisionFill:
+                                        Control: Rectangle
+                                        Properties:
+                                          Fill: =varTheme.gold
+                                          Height: =6
+                                          Width: |-
+                                            =(Parent.TemplateWidth - 220) *
+                                              If(20 = 0, 0,
+                                                 ThisItem.nCount / 20)
+                                          X: =168
+                                          Y: =14
+                                    - lblDivisionCount:
+                                        Control: Label
+                                        Properties:
+                                          Align: =Align.Right
+                                          Color: =varTheme.gold
+                                          Font: =varTheme.sans
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =18
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =12
+                                          Text: =Text(ThisItem.nCount)
+                                          Width: =32
+                                          Wrap: =false
+                                          X: =Parent.TemplateWidth - 40
+                                          Y: =4
+                        - cardByOrgDivision:
+                            Control: GroupContainer
+                            Variant: AutoLayout
+                            Properties:
+                              BorderColor: =varTheme.lightGray
+                              BorderThickness: =1
+                              Fill: =varTheme.darkGray
+                              LayoutAlignItems: =LayoutAlignItems.Stretch
+                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutGap: =12
+                              LayoutMinHeight: =0
+                              LayoutMinWidth: =0
+                              PaddingBottom: =24
+                              PaddingLeft: =24
+                              PaddingRight: =24
+                              PaddingTop: =24
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                            Children:
+                              - lblByOrgTitle:
+                                  Control: Label
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =varTheme.white
+                                    Font: =varTheme.serif
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =28
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =20
+                                    Text: ="By Org Division"
+                                    Wrap: =false
+                              - galByOrg:
+                                  Control: Gallery
+                                  Variant: Vertical
+                                  Properties:
+                                    Items: |-
+                                      =AddColumns(
+                                        RenameColumns(Distinct(colEmployees, OrgDivision), Value, lblText) As og,
+                                        nCount,
+                                        CountIf(
+                                          colNominations As nom,
+                                          LookUp(colEmployees As emp, Value(emp.CarolID) = nom.CarolID).OrgDivision = og.lblText
+                                        )
+                                      )
+                                    ShowScrollbar: =false
+                                    TemplateSize: =40
+                                  Children:
+                                    - lblOrgName:
+                                        Control: Label
+                                        Properties:
+                                          Color: =varTheme.offWhite
+                                          Font: =varTheme.sans
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =18
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =12
+                                          Text: =ThisItem.lblText
+                                          Width: =100
+                                          Wrap: =false
+                                          Y: =4
+                                    - rectOrgTrack:
+                                        Control: Rectangle
+                                        Properties:
+                                          Fill: =varTheme.medGray
+                                          Height: =6
+                                          Width: =Parent.TemplateWidth - 160
+                                          X: =108
+                                          Y: =14
+                                    - rectOrgFill:
+                                        Control: Rectangle
+                                        Properties:
+                                          Fill: =varTheme.gold
+                                          Height: =6
+                                          Width: |-
+                                            =(Parent.TemplateWidth - 160) *
+                                              If(20 = 0, 0,
+                                                 ThisItem.nCount / 20)
+                                          X: =108
+                                          Y: =14
+                                    - lblOrgCount:
+                                        Control: Label
+                                        Properties:
+                                          Align: =Align.Right
+                                          Color: =varTheme.gold
+                                          Font: =varTheme.sans
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =18
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =12
+                                          Text: =Text(ThisItem.nCount)
+                                          Width: =32
+                                          Wrap: =false
+                                          X: =Parent.TemplateWidth - 40
+                                          Y: =4
+

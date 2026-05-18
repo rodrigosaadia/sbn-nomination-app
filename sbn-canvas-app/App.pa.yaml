@@ -1,0 +1,95 @@
+App:
+  Properties:
+    OnStart: |-
+      =Set(
+        varTheme,
+        {
+          black:       RGBA(0,   0,   0,   1),
+          darkGray:    RGBA(26,  26,  26,  1),
+          medGray:     RGBA(45,  45,  45,  1),
+          gray:        RGBA(74,  74,  74,  1),
+          lightGray:   RGBA(138, 138, 138, 1),
+          silver:      RGBA(184, 184, 184, 1),
+          offWhite:    RGBA(245, 240, 235, 1),
+          white:       RGBA(255, 255, 255, 1),
+          gold:        RGBA(196, 162, 101, 1),
+          goldLight:   RGBA(212, 184, 122, 1),
+          goldDark:    RGBA(168, 138, 78,  1),
+          goldSoft:    RGBA(196, 162, 101, 0.13),
+          success:     RGBA(74,  155, 110, 1),
+          successSoft: RGBA(74,  155, 110, 0.15),
+          warning:     RGBA(212, 168, 67,  1),
+          warningSoft: RGBA(212, 168, 67,  0.15),
+          danger:      RGBA(199, 80,  80,  1),
+          dangerSoft:  RGBA(199, 80,  80,  0.15),
+          info:        RGBA(90,  143, 184, 1),
+          infoSoft:    RGBA(90,  143, 184, 0.15),
+          serif:       "'Constantia'",
+          sans:        "'Segoe UI'"
+        }
+      );
+
+      Set(
+        varCurrentUser,
+        { name: "Dione", email: "dione@loreal.com", role: "BP" }
+      );
+
+      Set(varCurrentPage, "dashboard");
+
+      ClearCollect(
+        colCountrySeats,
+        { country: "Brazil",    seats: 30, budget: 255000 },
+        { country: "Mexico",    seats: 25, budget: 212500 },
+        { country: "Argentina", seats: 20, budget: 170000 },
+        { country: "Colombia",  seats: 15, budget: 127500 },
+        { country: "Chile",     seats: 10, budget: 85000  }
+      );
+
+      ClearCollect(
+        colWorkflowStages,
+        { key: "nominated",              lblText: "PDL Country Nomination",     icon: "ClipboardList" },
+        { key: "country_hrd_validation", lblText: "Country HRD Validation",     icon: "CheckmarkCircle" },
+        { key: "zone_validation",        lblText: "Zone HRDs + PDL Validation", icon: "Globe" }
+      );
+
+      Set(
+        varPrevYearTotals,
+        { nominations: 71, investment: 639000, approved: 52 }
+      );
+
+      ClearCollect(
+        colPrevYearByCountry,
+        { country: "Brazil",    nominations: 22, investment: 198000 },
+        { country: "Mexico",    nominations: 18, investment: 162000 },
+        { country: "Argentina", nominations: 14, investment: 126000 },
+        { country: "Colombia",  nominations: 10, investment: 90000  },
+        { country: "Chile",     nominations: 7,  investment: 63000  }
+      );
+
+      // Cache SP lists. RenameColumns only on Title (no friendly display
+      // name on SP side) so the rest of the friendly names just work.
+      ClearCollect(colEmployees,
+        RenameColumns('01_Employees', Title, CarolID)
+      );
+      ClearCollect(colCourses,
+        RenameColumns('02_Courses', Title, CourseID, field_1, CourseName)
+      );
+      ClearCollect(colCountryAllocations,
+        RenameColumns('03_CountryAllocations', Title, Country)
+      );
+      ClearCollect(colNominations,
+        RenameColumns('04_Nominations', Title, NominationID)
+      );
+      ClearCollect(colHistory,
+        RenameColumns('05_NominationHistory', Title, HistoryID)
+      );
+
+      Set(varSelectedCourse, First(colCourses));
+      Set(varSelectedEmp,    First(colEmployees));
+      Set(varSelectedNom,    First(colNominations));
+
+      Set(varShowEmpModal,         false);
+      Set(varShowNominationForm,   false);
+      Set(varNominationIsException,false)
+    StartScreen: =scrDashboard
+    Theme: =PowerAppsTheme

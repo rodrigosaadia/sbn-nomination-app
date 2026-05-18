@@ -1,0 +1,1212 @@
+Screens:
+  scrCriteria:
+    Properties:
+      Fill: =varTheme.black
+      OnVisible: =Set(varCurrentPage, "criteria")
+    Children:
+      - grpCriteriaRoot:
+          Control: GroupContainer
+          Variant: ManualLayout
+          Properties:
+            Height: =Parent.Height
+            Width: =Parent.Width
+          Children:
+            - grpCriteriaSidebar:
+                Control: GroupContainer
+                Variant: ManualLayout
+                Properties:
+                  Fill: =varTheme.darkGray
+                  Height: =Parent.Height
+                  Width: =240
+                Children:
+                  - recCriteriaSidebarBorder:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.medGray
+                        Height: =Parent.Height
+                        Width: =1
+                        X: =239
+                  - lblCriteriaWordmark:
+                      Control: Label
+                      Properties:
+                        Color: =varTheme.white
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.serif
+                        FontWeight: =FontWeight.Bold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =22
+                        Text: ="L'ORÉAL"
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =28
+                  - lblCriteriaWordmarkSub:
+                      Control: Label
+                      Properties:
+                        Color: =varTheme.gold
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontWeight: =FontWeight.Semibold
+                        Height: =14
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =9
+                        Text: ="SEMINAR BY NOMINATION"
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =64
+                  - crtRecNavDashboardBorder:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "dashboard"
+                        Width: =3
+                        Y: =120
+                  - crtRecNavDashboardBg:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        Fill: =If(varCurrentPage = "dashboard", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =120
+                  - crtBtnNavDashboard:
+                      Control: Button
+                      Properties:
+                        Align: =Align.Left
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        BorderColor: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontColor: =If(varCurrentPage = "dashboard", varTheme.white, varTheme.silver)
+                        FontSize: =13
+                        FontWeight: =If(varCurrentPage = "dashboard", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        OnSelect: =Set(varCurrentPage, "dashboard"); Navigate(scrDashboard, ScreenTransition.Fade)
+                        Text: ="  Dashboard"
+                        Width: =240
+                        Y: =120
+                  - crtRecNavCoursesBorder:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "catalog"
+                        Width: =3
+                        Y: =168
+                  - crtRecNavCoursesBg:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        Fill: =If(varCurrentPage = "catalog", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =168
+                  - crtBtnNavCourses:
+                      Control: Button
+                      Properties:
+                        Align: =Align.Left
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        BorderColor: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontColor: =If(varCurrentPage = "catalog", varTheme.white, varTheme.silver)
+                        FontSize: =13
+                        FontWeight: =If(varCurrentPage = "catalog", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        OnSelect: =Set(varCurrentPage, "catalog"); Navigate(scrCatalog, ScreenTransition.Fade)
+                        Text: ="  Courses"
+                        Width: =240
+                        Y: =168
+                  - crtRecNavEmployeesBorder:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "employees"
+                        Width: =3
+                        Y: =216
+                  - crtRecNavEmployeesBg:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        Fill: =If(varCurrentPage = "employees", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =216
+                  - crtBtnNavEmployees:
+                      Control: Button
+                      Properties:
+                        Align: =Align.Left
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        BorderColor: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontColor: =If(varCurrentPage = "employees", varTheme.white, varTheme.silver)
+                        FontSize: =13
+                        FontWeight: =If(varCurrentPage = "employees", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        OnSelect: =Set(varCurrentPage, "employees"); Navigate(scrEmployees, ScreenTransition.Fade)
+                        Text: ="  Employees"
+                        Width: =240
+                        Y: =216
+                  - crtRecNavNominationsBorder:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "nominations"
+                        Width: =3
+                        Y: =264
+                  - crtRecNavNominationsBg:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        Fill: =If(varCurrentPage = "nominations", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =264
+                  - crtBtnNavNominations:
+                      Control: Button
+                      Properties:
+                        Align: =Align.Left
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        BorderColor: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontColor: =If(varCurrentPage = "nominations", varTheme.white, varTheme.silver)
+                        FontSize: =13
+                        FontWeight: =If(varCurrentPage = "nominations", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        OnSelect: =Set(varCurrentPage, "nominations"); Navigate(scrNominations, ScreenTransition.Fade)
+                        Text: ="  Nominations"
+                        Width: =240
+                        Y: =264
+                  - crtRecNavSeatsBorder:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "seats"
+                        Width: =3
+                        Y: =312
+                  - crtRecNavSeatsBg:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        Fill: =If(varCurrentPage = "seats", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =312
+                  - crtBtnNavSeats:
+                      Control: Button
+                      Properties:
+                        Align: =Align.Left
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        BorderColor: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontColor: =If(varCurrentPage = "seats", varTheme.white, varTheme.silver)
+                        FontSize: =13
+                        FontWeight: =If(varCurrentPage = "seats", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        OnSelect: =Set(varCurrentPage, "seats"); Navigate(scrSeats, ScreenTransition.Fade)
+                        Text: ="  Seats"
+                        Width: =240
+                        Y: =312
+                  - crtRecNavPDLBorder:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "pdl"
+                        Width: =3
+                        Y: =360
+                  - crtRecNavPDLBg:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        Fill: =If(varCurrentPage = "pdl", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =360
+                  - crtBtnNavPDL:
+                      Control: Button
+                      Properties:
+                        Align: =Align.Left
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        BorderColor: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontColor: =If(varCurrentPage = "pdl", varTheme.white, varTheme.silver)
+                        FontSize: =13
+                        FontWeight: =If(varCurrentPage = "pdl", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        OnSelect: =Set(varCurrentPage, "pdl"); Navigate(scrPDLLatam, ScreenTransition.Fade)
+                        Text: ="  PDL LATAM"
+                        Width: =240
+                        Y: =360
+                  - crtRecNavCriteriaBorder:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.gold
+                        Height: =44
+                        Visible: =varCurrentPage = "criteria"
+                        Width: =3
+                        Y: =408
+                  - crtRecNavCriteriaBg:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        Fill: =If(varCurrentPage = "criteria", varTheme.goldSoft, RGBA(0,0,0,0))
+                        Height: =44
+                        Width: =240
+                        Y: =408
+                  - crtBtnNavCriteria:
+                      Control: Button
+                      Properties:
+                        Align: =Align.Left
+                        Appearance: ='ButtonCanvas.Appearance'.Transparent
+                        BorderColor: =RGBA(0,0,0,0)
+                        Font: =varTheme.sans
+                        FontColor: =If(varCurrentPage = "criteria", varTheme.white, varTheme.silver)
+                        FontSize: =13
+                        FontWeight: =If(varCurrentPage = "criteria", FontWeight.Semibold, FontWeight.Normal)
+                        Height: =44
+                        OnSelect: =Set(varCurrentPage, "criteria"); Navigate(scrCriteria, ScreenTransition.Fade)
+                        Text: ="  Criteria"
+                        Width: =240
+                        Y: =408
+                  - recCriteriaSidebarFooterDivider:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =varTheme.medGray
+                        Height: =1
+                        Width: =208
+                        X: =16
+                        Y: =Parent.Height - 100
+                  - lblCriteriaFooterName:
+                      Control: Label
+                      Properties:
+                        Color: =varTheme.offWhite
+                        Font: =varTheme.sans
+                        FontWeight: =FontWeight.Semibold
+                        Height: =18
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Text: =varCurrentUser.name
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =Parent.Height - 84
+                  - lblCriteriaFooterRole:
+                      Control: Label
+                      Properties:
+                        Color: =varTheme.lightGray
+                        Font: =varTheme.sans
+                        Height: =14
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: =varCurrentUser.role
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =Parent.Height - 62
+                  - lblCriteriaFooterEmail:
+                      Control: Label
+                      Properties:
+                        Color: =varTheme.lightGray
+                        Font: =varTheme.sans
+                        Height: =14
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: =varCurrentUser.email
+                        Width: =192
+                        Wrap: =false
+                        X: =24
+                        Y: =Parent.Height - 42
+            - grpCriteriaContent:
+                Control: GroupContainer
+                Variant: AutoLayout
+                Properties:
+                  Fill: =varTheme.black
+                  Height: =Parent.Height
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Vertical
+                  LayoutGap: =16
+                  LayoutOverflowY: =LayoutOverflow.Scroll
+                  PaddingBottom: =32
+                  PaddingLeft: =32
+                  PaddingRight: =32
+                  PaddingTop: =32
+                  Width: =Parent.Width - 240
+                  X: =240
+                Children:
+                  - grpCriteriaHeader:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        FillPortions: =0
+                        Height: =80
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =6
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                      Children:
+                        - lblCriteriaTitle:
+                            Control: Label
+                            Properties:
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =varTheme.white
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =varTheme.serif
+                              FontWeight: =FontWeight.Bold
+                              Height: =48
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =36
+                              Text: ="Scoring Criteria"
+                              Wrap: =false
+                        - lblCriteriaSubtitle:
+                            Control: Label
+                            Properties:
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =varTheme.silver
+                              Font: =varTheme.sans
+                              Height: =20
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Text: ="How nomination priority is calculated"
+                              Wrap: =false
+                  - cardTalentClass:
+                      Control: GroupContainer
+                      Variant: ManualLayout
+                      Properties:
+                        Fill: =varTheme.darkGray
+                        FillPortions: =0
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                      Children:
+                        - recTalentBorder:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.lightGray
+                              BorderThickness: =1
+                              Fill: =RGBA(0,0,0,0)
+                              Height: =Parent.Height
+                              Width: =Parent.Width
+                        - lblTalentTitle:
+                            Control: Label
+                            Properties:
+                              Color: =varTheme.white
+                              Font: =varTheme.serif
+                              FontWeight: =FontWeight.Semibold
+                              Height: =28
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =18
+                              Text: ="Talent Classification"
+                              Width: =400
+                              Wrap: =false
+                              X: =24
+                              Y: =20
+                        - recTalentMaxBadge:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.gold
+                              BorderThickness: =1
+                              Fill: =varTheme.goldSoft
+                              Height: =22
+                              Width: =80
+                              X: =Parent.Width - 24 - 80
+                              Y: =22
+                        - lblTalentMaxBadge:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Center
+                              Color: =varTheme.gold
+                              Font: =varTheme.sans
+                              FontWeight: =FontWeight.Semibold
+                              Height: =22
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =10
+                              Text: ="MAX 30 PTS"
+                              Width: =80
+                              Wrap: =false
+                              X: =Parent.Width - 24 - 80
+                              Y: =22
+                        - galTalentItems:
+                            Control: Gallery
+                            Variant: Vertical
+                            Properties:
+                              Height: =Parent.Height - 84
+                              Items: |-
+                                =Table(
+                                  { lblText: "Future Leaders",    pts: 30 },
+                                  { lblText: "Rising Players",    pts: 22 },
+                                  { lblText: "Essential Players", pts: 15 }
+                                )
+                              ShowScrollbar: =false
+                              TemplateSize: =40
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =64
+                            Children:
+                              - lblTalentItemLabel:
+                                  Control: Label
+                                  Properties:
+                                    Color: =varTheme.offWhite
+                                    Font: =varTheme.sans
+                                    Height: =24
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Text: =ThisItem.lblText
+                                    Width: =180
+                                    Wrap: =false
+                                    Y: =6
+                              - recTalentItemBarBg:
+                                  Control: Rectangle
+                                  Properties:
+                                    Fill: =varTheme.medGray
+                                    Height: =12
+                                    Width: =Parent.TemplateWidth - 192 - 60
+                                    X: =192
+                                    Y: =14
+                              - recTalentItemBarFill:
+                                  Control: Rectangle
+                                  Properties:
+                                    Fill: =varTheme.gold
+                                    Height: =12
+                                    Width: =(ThisItem.pts / 30) * (Parent.TemplateWidth - 192 - 60)
+                                    X: =192
+                                    Y: =14
+                              - lblTalentItemPts:
+                                  Control: Label
+                                  Properties:
+                                    Align: =Align.Right
+                                    Color: =varTheme.gold
+                                    Font: =varTheme.sans
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =24
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =12
+                                    Text: =ThisItem.pts & " pts"
+                                    Width: =56
+                                    Wrap: =false
+                                    X: =Parent.TemplateWidth - 56
+                                    Y: =6
+                  - cardSuccession:
+                      Control: GroupContainer
+                      Variant: ManualLayout
+                      Properties:
+                        Fill: =varTheme.darkGray
+                        FillPortions: =0
+                        Height: =170
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                      Children:
+                        - recSuccessionBorder:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.lightGray
+                              BorderThickness: =1
+                              Fill: =RGBA(0,0,0,0)
+                              Height: =Parent.Height
+                              Width: =Parent.Width
+                        - lblSuccessionTitle:
+                            Control: Label
+                            Properties:
+                              Color: =varTheme.white
+                              Font: =varTheme.serif
+                              FontWeight: =FontWeight.Semibold
+                              Height: =28
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =18
+                              Text: ="Succession Pipeline"
+                              Width: =400
+                              Wrap: =false
+                              X: =24
+                              Y: =20
+                        - recSuccessionMaxBadge:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.gold
+                              BorderThickness: =1
+                              Fill: =varTheme.goldSoft
+                              Height: =22
+                              Width: =80
+                              X: =Parent.Width - 24 - 80
+                              Y: =22
+                        - lblSuccessionMaxBadge:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Center
+                              Color: =varTheme.gold
+                              Font: =varTheme.sans
+                              FontWeight: =FontWeight.Semibold
+                              Height: =22
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =10
+                              Text: ="MAX 20 PTS"
+                              Width: =80
+                              Wrap: =false
+                              X: =Parent.Width - 24 - 80
+                              Y: =22
+                        - galSuccessionItems:
+                            Control: Gallery
+                            Variant: Vertical
+                            Properties:
+                              Height: =Parent.Height - 84
+                              Items: |-
+                                =Table(
+                                  { lblText: "Yes - In succession pipeline",     pts: 20 },
+                                  { lblText: "No - Not in succession pipeline",  pts: 0  }
+                                )
+                              ShowScrollbar: =false
+                              TemplateSize: =40
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =64
+                            Children:
+                              - lblSuccessionItemLabel:
+                                  Control: Label
+                                  Properties:
+                                    Color: =varTheme.offWhite
+                                    Font: =varTheme.sans
+                                    Height: =24
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Text: =ThisItem.lblText
+                                    Width: =240
+                                    Wrap: =false
+                                    Y: =6
+                              - recSuccessionItemBarBg:
+                                  Control: Rectangle
+                                  Properties:
+                                    Fill: =varTheme.medGray
+                                    Height: =12
+                                    Width: =Parent.TemplateWidth - 252 - 60
+                                    X: =252
+                                    Y: =14
+                              - recSuccessionItemBarFill:
+                                  Control: Rectangle
+                                  Properties:
+                                    Fill: =varTheme.gold
+                                    Height: =12
+                                    Width: =(ThisItem.pts / 20) * (Parent.TemplateWidth - 252 - 60)
+                                    X: =252
+                                    Y: =14
+                              - lblSuccessionItemPts:
+                                  Control: Label
+                                  Properties:
+                                    Align: =Align.Right
+                                    Color: =varTheme.gold
+                                    Font: =varTheme.sans
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =24
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =12
+                                    Text: =ThisItem.pts & " pts"
+                                    Width: =56
+                                    Wrap: =false
+                                    X: =Parent.TemplateWidth - 56
+                                    Y: =6
+                  - cardSBNHistory:
+                      Control: GroupContainer
+                      Variant: ManualLayout
+                      Properties:
+                        Fill: =varTheme.darkGray
+                        FillPortions: =0
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                      Children:
+                        - recSBNHistoryBorder:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.lightGray
+                              BorderThickness: =1
+                              Fill: =RGBA(0,0,0,0)
+                              Height: =Parent.Height
+                              Width: =Parent.Width
+                        - lblSBNHistoryTitle:
+                            Control: Label
+                            Properties:
+                              Color: =varTheme.white
+                              Font: =varTheme.serif
+                              FontWeight: =FontWeight.Semibold
+                              Height: =28
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =18
+                              Text: ="SBN History"
+                              Width: =400
+                              Wrap: =false
+                              X: =24
+                              Y: =20
+                        - recSBNHistoryMaxBadge:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.gold
+                              BorderThickness: =1
+                              Fill: =varTheme.goldSoft
+                              Height: =22
+                              Width: =80
+                              X: =Parent.Width - 24 - 80
+                              Y: =22
+                        - lblSBNHistoryMaxBadge:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Center
+                              Color: =varTheme.gold
+                              Font: =varTheme.sans
+                              FontWeight: =FontWeight.Semibold
+                              Height: =22
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =10
+                              Text: ="MAX 15 PTS"
+                              Width: =80
+                              Wrap: =false
+                              X: =Parent.Width - 24 - 80
+                              Y: =22
+                        - galSBNHistoryItems:
+                            Control: Gallery
+                            Variant: Vertical
+                            Properties:
+                              Height: =Parent.Height - 84
+                              Items: |-
+                                =Table(
+                                  { lblText: "Never attended (0x)",         pts: 15 },
+                                  { lblText: "Attended once (1x)",          pts: 5  },
+                                  { lblText: "Attended twice or more (2+x)", pts: 0  }
+                                )
+                              ShowScrollbar: =false
+                              TemplateSize: =40
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =64
+                            Children:
+                              - lblSBNHistoryItemLabel:
+                                  Control: Label
+                                  Properties:
+                                    Color: =varTheme.offWhite
+                                    Font: =varTheme.sans
+                                    Height: =24
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Text: =ThisItem.lblText
+                                    Width: =240
+                                    Wrap: =false
+                                    Y: =6
+                              - recSBNHistoryItemBarBg:
+                                  Control: Rectangle
+                                  Properties:
+                                    Fill: =varTheme.medGray
+                                    Height: =12
+                                    Width: =Parent.TemplateWidth - 252 - 60
+                                    X: =252
+                                    Y: =14
+                              - recSBNHistoryItemBarFill:
+                                  Control: Rectangle
+                                  Properties:
+                                    Fill: =varTheme.gold
+                                    Height: =12
+                                    Width: =(ThisItem.pts / 15) * (Parent.TemplateWidth - 252 - 60)
+                                    X: =252
+                                    Y: =14
+                              - lblSBNHistoryItemPts:
+                                  Control: Label
+                                  Properties:
+                                    Align: =Align.Right
+                                    Color: =varTheme.gold
+                                    Font: =varTheme.sans
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =24
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =12
+                                    Text: =ThisItem.pts & " pts"
+                                    Width: =56
+                                    Wrap: =false
+                                    X: =Parent.TemplateWidth - 56
+                                    Y: =6
+                  - cardFlightRisk:
+                      Control: GroupContainer
+                      Variant: ManualLayout
+                      Properties:
+                        Fill: =varTheme.darkGray
+                        FillPortions: =0
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                      Children:
+                        - recFlightRiskBorder:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.lightGray
+                              BorderThickness: =1
+                              Fill: =RGBA(0,0,0,0)
+                              Height: =Parent.Height
+                              Width: =Parent.Width
+                        - lblFlightRiskTitle:
+                            Control: Label
+                            Properties:
+                              Color: =varTheme.white
+                              Font: =varTheme.serif
+                              FontWeight: =FontWeight.Semibold
+                              Height: =28
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =18
+                              Text: ="Flight Risk"
+                              Width: =400
+                              Wrap: =false
+                              X: =24
+                              Y: =20
+                        - recFlightRiskMaxBadge:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.gold
+                              BorderThickness: =1
+                              Fill: =varTheme.goldSoft
+                              Height: =22
+                              Width: =80
+                              X: =Parent.Width - 24 - 80
+                              Y: =22
+                        - lblFlightRiskMaxBadge:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Center
+                              Color: =varTheme.gold
+                              Font: =varTheme.sans
+                              FontWeight: =FontWeight.Semibold
+                              Height: =22
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =10
+                              Text: ="MAX 15 PTS"
+                              Width: =80
+                              Wrap: =false
+                              X: =Parent.Width - 24 - 80
+                              Y: =22
+                        - galFlightRiskItems:
+                            Control: Gallery
+                            Variant: Vertical
+                            Properties:
+                              Height: =Parent.Height - 84
+                              Items: |-
+                                =Table(
+                                  { lblText: "High Risk",   pts: 15 },
+                                  { lblText: "Medium Risk", pts: 8  },
+                                  { lblText: "Low Risk",    pts: 0  }
+                                )
+                              ShowScrollbar: =false
+                              TemplateSize: =40
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =64
+                            Children:
+                              - lblFlightRiskItemLabel:
+                                  Control: Label
+                                  Properties:
+                                    Color: =varTheme.offWhite
+                                    Font: =varTheme.sans
+                                    Height: =24
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Text: =ThisItem.lblText
+                                    Width: =180
+                                    Wrap: =false
+                                    Y: =6
+                              - recFlightRiskItemBarBg:
+                                  Control: Rectangle
+                                  Properties:
+                                    Fill: =varTheme.medGray
+                                    Height: =12
+                                    Width: =Parent.TemplateWidth - 192 - 60
+                                    X: =192
+                                    Y: =14
+                              - recFlightRiskItemBarFill:
+                                  Control: Rectangle
+                                  Properties:
+                                    Fill: =varTheme.gold
+                                    Height: =12
+                                    Width: =(ThisItem.pts / 15) * (Parent.TemplateWidth - 192 - 60)
+                                    X: =192
+                                    Y: =14
+                              - lblFlightRiskItemPts:
+                                  Control: Label
+                                  Properties:
+                                    Align: =Align.Right
+                                    Color: =varTheme.gold
+                                    Font: =varTheme.sans
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =24
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =12
+                                    Text: =ThisItem.pts & " pts"
+                                    Width: =56
+                                    Wrap: =false
+                                    X: =Parent.TemplateWidth - 56
+                                    Y: =6
+                  - cardPerformance:
+                      Control: GroupContainer
+                      Variant: ManualLayout
+                      Properties:
+                        Fill: =varTheme.darkGray
+                        FillPortions: =0
+                        Height: =240
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                      Children:
+                        - recPerformanceBorder:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.lightGray
+                              BorderThickness: =1
+                              Fill: =RGBA(0,0,0,0)
+                              Height: =Parent.Height
+                              Width: =Parent.Width
+                        - lblPerformanceTitle:
+                            Control: Label
+                            Properties:
+                              Color: =varTheme.white
+                              Font: =varTheme.serif
+                              FontWeight: =FontWeight.Semibold
+                              Height: =28
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =18
+                              Text: ="Performance"
+                              Width: =400
+                              Wrap: =false
+                              X: =24
+                              Y: =20
+                        - recPerformanceMaxBadge:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.gold
+                              BorderThickness: =1
+                              Fill: =varTheme.goldSoft
+                              Height: =22
+                              Width: =80
+                              X: =Parent.Width - 24 - 80
+                              Y: =22
+                        - lblPerformanceMaxBadge:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Center
+                              Color: =varTheme.gold
+                              Font: =varTheme.sans
+                              FontWeight: =FontWeight.Semibold
+                              Height: =22
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =10
+                              Text: ="MAX 20 PTS"
+                              Width: =80
+                              Wrap: =false
+                              X: =Parent.Width - 24 - 80
+                              Y: =22
+                        - galPerformanceItems:
+                            Control: Gallery
+                            Variant: Vertical
+                            Properties:
+                              Height: =Parent.Height - 84
+                              Items: |-
+                                =Table(
+                                  { lblText: "Exceeds Expectations",    pts: 20 },
+                                  { lblText: "Strong Performer",        pts: 14 },
+                                  { lblText: "Meets Expectations",      pts: 8  },
+                                  { lblText: "Developing Expectations", pts: 3  }
+                                )
+                              ShowScrollbar: =false
+                              TemplateSize: =40
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =64
+                            Children:
+                              - lblPerformanceItemLabel:
+                                  Control: Label
+                                  Properties:
+                                    Color: =varTheme.offWhite
+                                    Font: =varTheme.sans
+                                    Height: =24
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Text: =ThisItem.lblText
+                                    Width: =220
+                                    Wrap: =false
+                                    Y: =6
+                              - recPerformanceItemBarBg:
+                                  Control: Rectangle
+                                  Properties:
+                                    Fill: =varTheme.medGray
+                                    Height: =12
+                                    Width: =Parent.TemplateWidth - 232 - 60
+                                    X: =232
+                                    Y: =14
+                              - recPerformanceItemBarFill:
+                                  Control: Rectangle
+                                  Properties:
+                                    Fill: =varTheme.gold
+                                    Height: =12
+                                    Width: =(ThisItem.pts / 20) * (Parent.TemplateWidth - 232 - 60)
+                                    X: =232
+                                    Y: =14
+                              - lblPerformanceItemPts:
+                                  Control: Label
+                                  Properties:
+                                    Align: =Align.Right
+                                    Color: =varTheme.gold
+                                    Font: =varTheme.sans
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =24
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =12
+                                    Text: =ThisItem.pts & " pts"
+                                    Width: =56
+                                    Wrap: =false
+                                    X: =Parent.TemplateWidth - 56
+                                    Y: =6
+                  - cardTotalScore:
+                      Control: GroupContainer
+                      Variant: ManualLayout
+                      Properties:
+                        Fill: =varTheme.darkGray
+                        FillPortions: =0
+                        Height: =220
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                      Children:
+                        - recTotalScoreBorder:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.gold
+                              BorderThickness: =1
+                              Fill: =RGBA(0,0,0,0)
+                              Height: =Parent.Height
+                              Width: =Parent.Width
+                        - lblTotalScoreTitle:
+                            Control: Label
+                            Properties:
+                              Color: =varTheme.white
+                              Font: =varTheme.serif
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =20
+                              Text: ="Total Score 0 - 100"
+                              Width: =400
+                              Wrap: =false
+                              X: =24
+                              Y: =20
+                        - lblTotalScoreSub:
+                            Control: Label
+                            Properties:
+                              Color: =varTheme.silver
+                              Font: =varTheme.sans
+                              Height: =18
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =12
+                              Text: ="Priority bands applied to the composite score"
+                              Width: =Parent.Width - 48
+                              Wrap: =false
+                              X: =24
+                              Y: =54
+                        - recBandHigh:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.success
+                              BorderThickness: =1
+                              Fill: =RGBA(74, 155, 110, 0.15)
+                              Height: =34
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =92
+                        - lblBandHighLabel:
+                            Control: Label
+                            Properties:
+                              Color: =varTheme.success
+                              Font: =varTheme.sans
+                              FontWeight: =FontWeight.Semibold
+                              Height: =34
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Text: ="High Priority"
+                              Width: =300
+                              Wrap: =false
+                              X: =40
+                              Y: =92
+                        - lblBandHighRange:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Right
+                              Color: =varTheme.success
+                              Font: =varTheme.sans
+                              FontWeight: =FontWeight.Semibold
+                              Height: =34
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Text: ="75 - 100 pts"
+                              Width: =124
+                              Wrap: =false
+                              X: =Parent.Width - 24 - 140
+                              Y: =92
+                        - recBandMedium:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.warning
+                              BorderThickness: =1
+                              Fill: =RGBA(212, 168, 67, 0.15)
+                              Height: =34
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =132
+                        - lblBandMediumLabel:
+                            Control: Label
+                            Properties:
+                              Color: =varTheme.warning
+                              Font: =varTheme.sans
+                              FontWeight: =FontWeight.Semibold
+                              Height: =34
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Text: ="Medium Priority"
+                              Width: =300
+                              Wrap: =false
+                              X: =40
+                              Y: =132
+                        - lblBandMediumRange:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Right
+                              Color: =varTheme.warning
+                              Font: =varTheme.sans
+                              FontWeight: =FontWeight.Semibold
+                              Height: =34
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Text: ="50 - 74 pts"
+                              Width: =124
+                              Wrap: =false
+                              X: =Parent.Width - 24 - 140
+                              Y: =132
+                        - recBandLow:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =varTheme.silver
+                              BorderThickness: =1
+                              Fill: =varTheme.medGray
+                              Height: =34
+                              Width: =Parent.Width - 48
+                              X: =24
+                              Y: =172
+                        - lblBandLowLabel:
+                            Control: Label
+                            Properties:
+                              Color: =varTheme.lightGray
+                              Font: =varTheme.sans
+                              FontWeight: =FontWeight.Semibold
+                              Height: =34
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Text: ="Low Priority"
+                              Width: =300
+                              Wrap: =false
+                              X: =40
+                              Y: =172
+                        - lblBandLowRange:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Right
+                              Color: =varTheme.lightGray
+                              Font: =varTheme.sans
+                              FontWeight: =FontWeight.Semibold
+                              Height: =34
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Text: ="Below 50 pts"
+                              Width: =124
+                              Wrap: =false
+                              X: =Parent.Width - 24 - 140
+                              Y: =172
